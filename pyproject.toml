@@ -1,0 +1,38 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "acutils"
+version = "0.1"
+authors = [
+  { name="Acuzle", email="contact@acuzle.com" },
+  { name="ThomasPDM", email="thomaspdm@acuzle.com" },
+]
+maintainers = [
+  { name="Acuzle", email="contact@acuzle.com" },
+  { name="ThomasPDM", email="thomaspdm@acuzle.com" },
+]
+description = "useful functions and classes implemented by Acuzle"
+readme = "README.md"
+license = { text="Proprietary" }
+requires-python = ">=3.7"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: Proprietary",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+  'numpy',
+  'joblib',
+  'pandas',
+  'scikit-image',
+  'opencv-python',
+  'Pillow',
+  'openslide-python',
+]
+
+[project.urls]
+"repository" = "https://github.com/Acuzle/acutils"
+"Homepage" = "https://github.com/Acuzle/acutils"
+"Bug Tracker" = "https://github.com/Acuzle/acutils/issues"
