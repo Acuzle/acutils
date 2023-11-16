@@ -1,6 +1,11 @@
-import cv2
 import os
 
+try:
+    import cv2
+except ImportError:
+    print("|WRN| You must install 'opencv-python' (cv2) to use image module. "
+          "Leaving.")
+    exit()
 
 
 # A function prefixed with "tmnt" is a treatment function and must have those parameters:

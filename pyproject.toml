@@ -13,23 +13,30 @@ maintainers = [
   { name="Acuzle", email="contact@acuzle.com" },
   { name="ThomasPDM", email="thomaspdm@acuzle.com" },
 ]
-description = "useful functions and classes implemented by Acuzle"
+description = "Data pre processing library implemented by Acuzle."
 readme = "README.md"
-license = { text="Proprietary" }
+license = { text="Apache 2" }
 requires-python = ">=3.7"
 classifiers = [
     "Programming Language :: Python :: 3",
-    "License :: OSI Approved :: Proprietary",
+    "License :: OSI Approved :: Apache 2",
     "Operating System :: OS Independent",
 ]
 dependencies = [
   'numpy',
   'joblib',
   'pandas',
+  'openpyxl'
+]
+
+[project.optional-dependencies]
+dependencies = [
   'scikit-image',
   'opencv-python',
   'Pillow',
   'openslide-python',
+  'cupy',
+  'cucim'
 ]
 
 [project.urls]

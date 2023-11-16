@@ -346,6 +346,7 @@ class DataHandler:
         return self._balance_dataset(tdata), self._balance_dataset(vdata)
 
 
+    # @TODO maybe add an optional val_percentage and define a test set
     def split(self, train_percentage=0.7, balance=False):
         '''
         Split labeled data into train and test datasets.

@@ -7,7 +7,7 @@ import pandas as pd
 #  - dstdir: absolute path to the directory that should contain new files (str)
 # Also, it shouldn't return anything.
 
-
+# @TODO Maybe update functions using df.isin() for masks.
 
 def delete_clueless_rows(df, clueless_words=None, columns=None, inplace=False):
     '''
@@ -45,7 +45,8 @@ def delete_clueless_rows(df, clueless_words=None, columns=None, inplace=False):
         return df[mask]
 
 
-
+# @TODO pd.read_table might be the same function (but better).
+# https://pandas.pydata.org/docs/reference/api/pandas.read_table.html
 def read_df_from_any_avalaible_extensions(sheetpath):
     '''
     Load a Pandas DataFrame from a file.

@@ -1,0 +1,7 @@
+scikit-image
+pooch
+opencv-python
+Pillow
+openslide-python
+cupy
+cucim

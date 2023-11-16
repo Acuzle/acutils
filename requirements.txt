@@ -1,0 +1,4 @@
+numpy
+joblib
+pandas
+openpyxl

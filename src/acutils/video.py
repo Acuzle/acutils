@@ -1,5 +1,12 @@
-import cv2
 import os
+
+try:
+    import cv2
+except ImportError:
+    print("|WRN| You must install 'opencv-python' (cv2) to use video module. "
+          "Leaving.")
+    exit()
+
 
 
 
@@ -132,7 +139,7 @@ def tmnt_extract_sequences_for_binary_classification(src, dstdir, bound, extra_d
     scount = 0 # sequence counter
     old_passed = False
 
-    for passed, count, frame in browse_frames_for_binary_classification(src, bound, 
+    for passed, _, frame in browse_frames_for_binary_classification(src, bound, 
       extra_down, extra_up, start, end):
         if old_passed != passed: # a sequence should be entirely before or after the skip
             seq = []

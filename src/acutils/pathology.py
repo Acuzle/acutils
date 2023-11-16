@@ -2,10 +2,29 @@ import cv2
 import math
 import numpy as np
 import os
-from openslide import OpenSlide
-from PIL import Image
-from skimage.io import imread, imsave
-from skimage.data import skin as skimgskin
+
+try:
+    from PIL import Image
+except ImportError:
+    print("|WRN| You must install 'Pillow' to use pathology module. "
+          "Leaving.")
+    exit()
+
+try:
+    from openslide import OpenSlide
+except ImportError:
+    print("|WRN| You must install 'openslide-python' to use pathology module. "
+          "Be careful, it also requires Openslide installation on your computer"
+          ", the 'openslide-python' Python library is just a mapping. Leaving.")
+    exit()
+    
+try:
+    from skimage.io import imread, imsave
+    from skimage.data import skin as skimgskin
+except ImportError:
+    print("|WRN| You must install 'scikit-image' to use pathology module. "
+          "You might need a skimage optinal dependencie: 'pooch'. Leaving.")
+    exit()
 
 from . import gpu
 
@@ -21,7 +40,7 @@ from . import gpu
 Image.MAX_IMAGE_PIXELS = None
 import skimage as axskimg
 import numpy as axp
-gpu.gpu_computation() # if True import cucim.skimage as axskimg and cupy as axp
+gpu.set_gpu_computation() # if True import cucim.skimage as axskimg and cupy as axp
 
 
 

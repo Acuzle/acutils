@@ -18,7 +18,7 @@ RAISES
 None
 
 
-# gpu_computation
+# set_gpu_computation
 
 
 Enable or disable gpu computation. To enable it, cupy and cucim modules are needed.
