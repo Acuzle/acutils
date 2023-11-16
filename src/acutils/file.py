@@ -14,9 +14,19 @@ import re
 def copyfile(src, dst):
     '''
     Copy a file from src to dst without checking anything.
-    \nPARAMETERS
-      src (str): absolute path to the file that will be copied
-      dst (str): absolute path to the future copied file
+
+    PARAMETERS
+    ----------
+    - src (str): absolute path to the file that will be copied.
+    - dst (str): absolute path to the future copied file.
+
+    RETURNS
+    -------
+    None
+
+    RAISES
+    ------
+    None
     '''
     shutil.copyfile(src, dst)
 
@@ -25,9 +35,19 @@ def copyfile(src, dst):
 def copyfile_with_safety(src, dst):
     '''
     Copy a file from src to dst and check if src file and dst directory are existing.
-    \nPARAMETERS
-      src (str): absolute path to the file that will be copied
-      dst (str): absolute path to the future copied file
+
+    PARAMETERS
+    ----------
+    - src (str): absolute path to the file that will be copied.
+    - dst (str): absolute path to the future copied file.
+
+    RETURNS
+    -------
+    None
+
+    RAISES
+    ------
+    None
     '''
     if os.path.isfile(src):
         if os.path.isdir(os.path.dirname(dst)):
@@ -42,11 +62,21 @@ def copyfile_with_safety(src, dst):
 def tmnt_copyfile_to_dir(src, dstdir, newfilename=None, safecopy=True):
     '''
     Copy a file from src to a dst directory.
-    \nPARAMETERS
-      src (str): absolute path to the file that will be copied
-      dstdir (str): absolute path to the directory that should contain the copy
-      newfilename=None (str): filename expected, if None src filename is used
-      safecopy=True (bool): if True copyfile_with_safety is called, else copyfile is called
+
+    PARAMETERS
+    ----------
+    - src (str): absolute path to the file that will be copied.
+    - dstdir (str): absolute path to the directory that should contain the copy.
+    - newfilename=None (str): filename expected, if None src filename is used.
+    - safecopy=True (bool): if True copyfile_with_safety is called, else copyfile is called.
+
+    RETURNS
+    -------
+    None
+
+    RAISES
+    ------
+    None
     '''
     if newfilename is str:
         dst = os.path.join(dstdir, newfilename)
@@ -65,11 +95,21 @@ def tmnt_copyfile_to_dir(src, dstdir, newfilename=None, safecopy=True):
 def copyfiles_to_dir(srcs, dstdir, newfilename=None, safecopy=True):
     '''
     Copy multiple files from srcs to a dst directory using "copyfile_to_dir" function.
-    \nPARAMETERS
-      srcs (iterable of str): absolute paths to the files that will be copied
-      dstdir (str): absolute path to the directory that should contain the copy
-      newfilename=None (str): filename expected, if None src filename is used
-      safecopy=True (bool): if True copyfile_with_safety is called, else copyfile is called
+
+    PARAMETERS
+    ----------
+    - srcs (iterable of str): absolute paths to the files that will be copied.
+    - dstdir (str): absolute path to the directory that should contain the copy.
+    - newfilename=None (str): filename expected, if None src filename is used.
+    - safecopy=True (bool): if True copyfile_with_safety is called, else copyfile is called.
+
+    RETURNS
+    -------
+    None
+
+    RAISES
+    ------
+    None
     '''
     for src in srcs:
         tmnt_copyfile_to_dir(src, dstdir, newfilename, safecopy)
@@ -80,9 +120,19 @@ def reset_directory(dirpath, subs=[]):
     '''
     Delete directory if it exists, then create it again and fill it with
     empty subdirecories named from subs argument.
-    \nPARAMETERS
-      dirpath (str): absolute path to the directory to reset
-      subs (list<str>): name of the subdirectories that should be in dirpath
+
+    PARAMETERS
+    ----------
+    - dirpath (str): absolute path to the directory to reset.
+    - subs (list<str>): name of the subdirectories that should be in dirpath.
+
+    RETURNS
+    -------
+    None
+
+    RAISES
+    ------
+    None
     '''
     if os.path.isdir(dirpath): shutil.rmtree(dirpath) # remove existing files
     os.mkdir(dirpath) # create the new empty directory
@@ -94,9 +144,19 @@ def reset_directory(dirpath, subs=[]):
 def tmnt_generate_documentation(src, dstdir):
     '''
     Extract documentation inside python file and fill it into markdown file.
-    \nPARAMETERS
-      src (str): absolute path to the python file
-      dstdir (str): absolute path to the new markdown file
+
+    PARAMETERS
+    ----------
+    - src (str): absolute path to the python file.
+    - dstdir (str): absolute path to the new markdown file.
+
+    RETURNS
+    -------
+    None
+
+    RAISES
+    ------
+    None
     '''
     # Read the source file into a string
     with open(src, 'r') as f:
@@ -126,7 +186,7 @@ def tmnt_generate_documentation(src, dstdir):
             else:
                 in_doc = True
         elif in_doc:
-            docstring += '\n' + line
+            docstring += '\n' + line.strip()
     docstrings.append(docstring)
 
     # Write the documentation to the target file
@@ -134,6 +194,6 @@ def tmnt_generate_documentation(src, dstdir):
     with open(target_file, 'w') as f:
         f.write(f'# {os.path.basename(target_file)[:-3]}\n\n')
         for function, docstring in zip(functions, docstrings):
-            f.write(f'## {function}\n\n```\n')
+            f.write(f'# {function}\n\n\n')
             f.write(docstring.strip())
-            f.write('\n```\n\n')
+            f.write('\n\n\n')

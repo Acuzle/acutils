@@ -8,10 +8,18 @@
 def cupy_to_numpy(arr):
     '''
     Return a numpy.array from a cupy.array or a numpy.array.
-    \nPARAMETERS
-      arr (numpy.array or cupy.array): array to convert as numpy one (if not already)
-    \nRETURNS
-      convarr (numpy.array): converted array
+
+    PARAMETERS
+    ----------
+    - arr (numpy.array or cupy.array): array to convert as numpy one (if not already).
+
+    RETURNS
+    -------
+    convarr (numpy.array): converted array.
+
+    RAISES
+    ------
+    None
     '''
     try:
         return arr.get() # if using gpu (cupy)
@@ -20,12 +28,22 @@ def cupy_to_numpy(arr):
 
 
 
-def gpu_computation(activate=False):
+def gpu_computation(activate=True):
     '''
     Enable or disable gpu computation. To enable it, cupy and cucim modules are needed.
     It changes import as axskimg and axp.
-    \nPARAMETERS
-      activate=False (bool): activate or not gpu computation
+
+    PARAMETERS
+    ----------
+    - activate=False (bool): activate or not gpu computation.
+
+    RETURNS
+    -------
+    None
+
+    RAISES
+    ------
+    None
     '''
     global axskimg, axp # strange names to avoid conflicts
     if activate == True:
@@ -35,7 +53,7 @@ def gpu_computation(activate=False):
         except ImportError:
             import skimage as axskimg
             import numpy as axp
-            print("|WRN| using cpu, cucim or cupy not available")
+            print("|WRN| Using CPU, cucim or cupy not available.")
     else:
         import skimage as axskimg
         import numpy as axp
@@ -45,11 +63,21 @@ def gpu_computation(activate=False):
 def select_device(device):
     '''
     Select device used for some gpu computations of the current process.
-    \nPARAMETERS
-      device (int or None): selected gpu (if None, does nothing)
+
+    PARAMETERS
+    ----------
+    - device (int or None): selected gpu (if None, does nothing).
+
+    RETURNS
+    -------
+    None
+
+    RAISES
+    ------
+    None
     '''
     if device is not None:
         try:
             axp.cuda.Device(device).use()
         except AttributeError:
-            print("|WRN| using cpu, for gpu computation call _gpu_computation(activate=True)")
+            print("|WRN| Using CPU, for gpu computation call gpu_computation(activate=True).")

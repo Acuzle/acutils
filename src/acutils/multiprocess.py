@@ -8,14 +8,24 @@ def _process_func_on_multiple_files(srcs, dstdirs, func, **kwargs):
     Call "func" function for each "src"/"dstdir" from "srcs"/"dstdirs".
     "func" needs "src" and "dstdir" params (in acutils, those are prefixed with "tmnt").
     **kwargs should be addionnal arguments to pass to the "func" function.
-    \nPARAMETERS
-      srcs (array/list like of str): source file of each process
-      dstdirs (array/list like of str): destination directory of each process
-      func (function): treatment that will be applied on each source file 
+
+    PARAMETERS
+    ----------
+    - srcs (array/list like of str): Source file of each process.
+    - dstdirs (array/list like of str): Destination directory of each process.
+    - func (function): Treatment that will be applied on each source file 
                        it needs an absolute path to the source file "src" 
                        and absolute absolute path to destination files directory "dstdir"
-                       in acutils, any function prefixed with "tmnt" is usable
-      **kwargs: arguments to pass to the "func" function.
+                       in acutils, any function prefixed with "tmnt" is usable.
+    - **kwargs: Arguments to pass to the "func" function.
+    
+    RETURNS
+    -------
+    None
+    
+    RAISES
+    ------
+    None
     '''
     for src, dstdir in zip(srcs, dstdirs):
         func(src, dstdir, **kwargs)
@@ -28,15 +38,25 @@ def run_processes_on_multiple_files(packed_srcs, packed_dstdirs, func, allowed_c
     source file.
     "func" needs "src" and "dstdir" params (in acutils, those are prefixed with "tmnt").
     **kwargs should be addionnal arguments to pass to the "func" function.
-    \nPARAMETERS
-      packed_srcs (list<list<str>>): source files absolute paths per process
-      packed_dstdirs (list<list<str>>): destination directories absolute paths per process
-      func (function): treatment that will be applied on each source file
+
+    PARAMETERS
+    ----------
+    - packed_srcs (list<list<str>>): Source files absolute paths per process.
+    - packed_dstdirs (list<list<str>>): Destination directories absolute paths per process.
+    - func (function): Treatment that will be applied on each source file
                        it needs an absolute path to the source file "src" 
                        and absolute absolute path to destination files directory "dstdir"
-                       in acutils, any function prefixed with "tmnt" is usable
-      allowed_cpus=1 (int): maximum amount of cpus used to compute
-      **kwargs: arguments to pass to the "func" function.
+                       in acutils, any function prefixed with "tmnt" is usable.
+    - allowed_cpus=1 (int): Maximum amount of cpus used to compute.
+    - **kwargs: Arguments to pass to the "func" function.
+    
+    RETURNS
+    -------
+    None
+    
+    RAISES
+    ------
+    None
     '''
     Parallel(n_jobs=allowed_cpus)(delayed(_process_func_on_multiple_files)(
                 srcs = srcs,
@@ -51,14 +71,22 @@ def distribute(srcs, dstdirs, allowed_cpus=1, seed=871):
     '''
     Distribute files to process and split them between allowed cpus.
     The distribution is returned as 2 lists of lists of src or dstdir.
-    \nPARAMETERS
-      srcs (array/list like of str): source files
-      dstdirs (array/list like of str): destination directories
-      allowed_cpus=1 (int): maximum amount of cpus used to compute
-      seed=871 (int): seed used to initialize numpy randomizer
-    \nRETURNS
-      packed_srcs (list<list<str>>): source files absolute paths per process
-      packed_dstdirs (list<list<str>>): destination directories absolute paths per process
+
+    PARAMETERS
+    ----------
+    - srcs (array/list like of str): Source files.
+    - dstdirs (array/list like of str): Destination directories.
+    - allowed_cpus=1 (int): Maximum amount of cpus used to compute.
+    - seed=871 (int): Seed used to initialize numpy randomizer.
+
+    RETURNS
+    -------
+    - packed_srcs (list<list<str>>): Source files absolute paths per process.
+    - packed_dstdirs (list<list<str>>): Destination directories absolute paths per process.
+    
+    RAISES
+    ------
+    None
     '''
     # Use numpy arrays to select with indices
     if type(srcs) is not np.array:
