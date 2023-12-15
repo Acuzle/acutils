@@ -38,9 +38,9 @@ from . import gpu
 
 
 Image.MAX_IMAGE_PIXELS = None
-import skimage as axskimg
-import numpy as axp
-gpu.set_gpu_computation() # if True import cucim.skimage as axskimg and cupy as axp
+import skimage as auski
+import numpy as aunp
+gpu.set_gpu_computation() # if True import cucim.skimage as auski and cupy as aunp
 
 
 
@@ -62,15 +62,15 @@ def update_ref_image(img_path=None):
     '''
     global REF_IMAGE, IHC_H_REF, IHC_E_REF, IHC_D_REF
     if img_path is None:
-        REF_IMAGE = axp.array(REF_IMAGE) # if called to switch from RAM to GPU
+        REF_IMAGE = aunp.array(REF_IMAGE) # if called to switch from RAM to GPU
     else:
-        REF_IMAGE = axp.array(imread(img_path))
+        REF_IMAGE = aunp.array(imread(img_path))
     
-    ihc_hed = (axskimg.color.rgb2hed(REF_IMAGE))
-    null = axp.zeros_like(ihc_hed[:, :, 0])
-    IHC_H_REF = axskimg.color.hed2rgb(axp.stack((ihc_hed[:, :, 0], null, null), axis=-1))
-    IHC_E_REF = axskimg.color.hed2rgb(axp.stack((null, ihc_hed[:, :, 1], null), axis=-1))
-    IHC_D_REF = axskimg.color.hed2rgb(axp.stack((null, null, ihc_hed[:, :, 2]), axis=-1))
+    ihc_hed = (auski.color.rgb2hed(REF_IMAGE))
+    null = aunp.zeros_like(ihc_hed[:, :, 0])
+    IHC_H_REF = auski.color.hed2rgb(aunp.stack((ihc_hed[:, :, 0], null, null), axis=-1))
+    IHC_E_REF = auski.color.hed2rgb(aunp.stack((null, ihc_hed[:, :, 1], null), axis=-1))
+    IHC_D_REF = auski.color.hed2rgb(aunp.stack((null, null, ihc_hed[:, :, 2]), axis=-1))
 
 
 REF_IMAGE = skimgskin()
@@ -103,23 +103,23 @@ def harmonize(img):
       cytology and histology / the International Academy of Cytology [and]
       American Society of Cytology, vol. 23, no. 4, pp. 291-9, Aug. 2001.
     '''
-    ihc_hed = (axskimg.color.rgb2hed(img))
-    null = axp.zeros_like(ihc_hed[:, :, 0])
+    ihc_hed = (auski.color.rgb2hed(img))
+    null = aunp.zeros_like(ihc_hed[:, :, 0])
 
-    ihc_h = axskimg.color.hed2rgb(axp.stack((ihc_hed[:, :, 0], null, null), axis=-1))
-    hist_h = axskimg.exposure.match_histograms(ihc_h, IHC_H_REF)
+    ihc_h = auski.color.hed2rgb(aunp.stack((ihc_hed[:, :, 0], null, null), axis=-1))
+    hist_h = auski.exposure.match_histograms(ihc_h, IHC_H_REF)
     del ihc_h
 
-    ihc_e = axskimg.color.hed2rgb(axp.stack((null, ihc_hed[:, :, 1], null), axis=-1))
-    hist_e = axskimg.exposure.match_histograms(ihc_e, IHC_E_REF)
+    ihc_e = auski.color.hed2rgb(aunp.stack((null, ihc_hed[:, :, 1], null), axis=-1))
+    hist_e = auski.exposure.match_histograms(ihc_e, IHC_E_REF)
     del ihc_e
 
-    ihc_d = axskimg.color.hed2rgb(axp.stack((null, null, ihc_hed[:, :, 2]), axis=-1))
-    hist_d = axskimg.exposure.match_histograms(ihc_d, IHC_D_REF)
+    ihc_d = auski.color.hed2rgb(aunp.stack((null, null, ihc_hed[:, :, 2]), axis=-1))
+    hist_d = auski.exposure.match_histograms(ihc_d, IHC_D_REF)
     del ihc_d, ihc_hed, null
     
-    return (axp.dstack((hist_h[:, :, 0], hist_e[:, :, 1], hist_d[:, :, 2])
-                    )*255).astype(axp.uint8)
+    return (aunp.dstack((hist_h[:, :, 0], hist_e[:, :, 1], hist_d[:, :, 2])
+                    )*255).astype(aunp.uint8)
 
 
 
@@ -140,7 +140,7 @@ def tmnt_harmonize(src, dstdir):
     ------
     None
     '''
-    img = harmonize(axp.array(imread(src)))
+    img = harmonize(aunp.array(imread(src)))
     imsave(os.path.join(dstdir, os.path.basename(src)), 
             gpu.cupy_to_numpy(img), check_contrast=False)
 
@@ -165,7 +165,7 @@ def get_preview(slide, lvl=-1, divider=None):
     None
     '''
     if divider is None:
-        preview = axp.array(np.asarray(slide.get_thumbnail(slide.level_dimensions[lvl])))
+        preview = aunp.array(np.asarray(slide.get_thumbnail(slide.level_dimensions[lvl])))
         
     else:
         width, height = slide.level_dimensions[lvl]
@@ -174,12 +174,12 @@ def get_preview(slide, lvl=-1, divider=None):
 
         w, h = int(width/amount), int(height/amount) # area with old scale
         nw, nh = int(new_width/amount),  int(new_height/amount) # area with new scale
-        preview = axp.zeros((new_height, new_width, 3), dtype=axp.uint8) + 255
+        preview = aunp.zeros((new_height, new_width, 3), dtype=aunp.uint8) + 255
 
         # Update prew divided area per divided area
         for i in range(amount):
             for j in range(amount):
-                preview[j*nh:(j+1)*nh, i*nw:(i+1)*nw] = axp.array(cv2.resize(
+                preview[j*nh:(j+1)*nh, i*nw:(i+1)*nw] = aunp.array(cv2.resize(
                     np.array(slide.read_region((i*w,j*h), 0, (w, h)), dtype=np.uint8)[:,:,:3], 
                     dsize=(nw, nh), interpolation=cv2.INTER_NEAREST))
     return preview
@@ -204,11 +204,11 @@ def get_cleaned_binary(preview, fp_val=16, sigma=2):
     ------
     None
     '''
-    bw = axskimg.color.rgb2gray(preview)
-    bw = axskimg.filters.threshold_otsu(bw) > axskimg.filters.gaussian(bw, sigma)
-    bw = axskimg.morphology.opening(bw, axskimg.morphology.square(fp_val))
-    bw += axskimg.segmentation.clear_border(~bw)
-    bw = axskimg.morphology.dilation(bw, axskimg.morphology.disk(int(fp_val*0.25)))
+    bw = auski.color.rgb2gray(preview)
+    bw = auski.filters.threshold_otsu(bw) > auski.filters.gaussian(bw, sigma)
+    bw = auski.morphology.opening(bw, auski.morphology.square(fp_val))
+    bw += auski.segmentation.clear_border(~bw)
+    bw = auski.morphology.dilation(bw, auski.morphology.disk(int(fp_val*0.25)))
     return bw
 
 
@@ -230,8 +230,8 @@ def mask_rgb(rgb, mask):
     ------
     None
     '''
-    mask_rgb = axp.repeat(mask[...,None],3,axis=2)
-    return mask_rgb*rgb + (~mask_rgb*255).astype(axp.uint8)
+    mask_rgb = aunp.repeat(mask[...,None],3,axis=2)
+    return mask_rgb*rgb + (~mask_rgb*255).astype(aunp.uint8)
 
 
 
@@ -259,7 +259,7 @@ def browse_segments(slide, bw, lvl=0, required_area=10000, do_harmonize=False):
     new_width, new_height = bw.shape[1], bw.shape[0] # for preview
     xresolution = width / new_width
     yresolution = height / new_height
-    for region in axskimg.measure.regionprops(axskimg.measure.label(bw)):
+    for region in auski.measure.regionprops(auski.measure.label(bw)):
         x, y = region.bbox[:2]
         w, h = region.bbox[2] - x, region.bbox[3] - y
         if w*h > required_area:
@@ -267,13 +267,13 @@ def browse_segments(slide, bw, lvl=0, required_area=10000, do_harmonize=False):
             y = int(y*yresolution)
             w = int(w*xresolution)
             h = int(h*yresolution)
-            segment_mask = axskimg.transform.resize(region.image, (w,h))
+            segment_mask = auski.transform.resize(region.image, (w,h))
             if do_harmonize:
-                segment = harmonize(axp.array(np.array(slide.read_region(
-                    (y,x), 0, (h, w)), dtype=axp.uint8)[:,:,:3]))
+                segment = harmonize(aunp.array(np.array(slide.read_region(
+                    (y,x), 0, (h, w)), dtype=aunp.uint8)[:,:,:3]))
             else:
-                segment = axp.array(np.array(slide.read_region(
-                    (y,x), 0, (h, w)), dtype=axp.uint8)[:,:,:3])
+                segment = aunp.array(np.array(slide.read_region(
+                    (y,x), 0, (h, w)), dtype=aunp.uint8)[:,:,:3])
             yield gpu.cupy_to_numpy(mask_rgb(rgb=segment, mask=segment_mask))
 
 

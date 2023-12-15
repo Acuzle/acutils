@@ -31,7 +31,7 @@ def cupy_to_numpy(arr):
 def set_gpu_computation(activate=True):
     '''
     Enable or disable gpu computation. To enable it, cupy and cucim modules are needed.
-    It changes import as axskimg and axp.
+    It changes import as auski and aunp.
 
     PARAMETERS
     ----------
@@ -45,18 +45,18 @@ def set_gpu_computation(activate=True):
     ------
     None
     '''
-    global axskimg, axp # strange names to avoid conflicts
+    global auski, aunp # strange names to avoid conflicts
     if activate == True:
         try:
-            import cucim.skimage as axskimg
-            import cupy as axp
+            import cucim.skimage as auski
+            import cupy as aunp
         except ImportError:
-            import skimage as axskimg
-            import numpy as axp
+            import skimage as auski
+            import numpy as aunp
             print("|WRN| Using CPU, cucim or cupy not available.")
     else:
-        import skimage as axskimg
-        import numpy as axp
+        import skimage as auski
+        import numpy as aunp
 
 
 
@@ -78,6 +78,6 @@ def select_device(device):
     '''
     if device is not None:
         try:
-            axp.cuda.Device(device).use()
+            aunp.cuda.Device(device).use()
         except AttributeError:
             print("|WRN| Using CPU, for gpu computation call set_gpu_computation(activate=True).")
