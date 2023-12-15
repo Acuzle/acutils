@@ -4,14 +4,17 @@
 
 
 Change reference image using when calling harmonize function.
+If you called `gpu.set_gpu_computation(activate=True)`, calling will load
+the image on the GPU (using cupy instead of numpy).
 
 PARAMETERS
 ----------
-img_path=None (str): Absolute path to the image that will be the reference to harmonize.
+- img_path=None (str): Absolute path to the image that will be
+- the reference to harmonize.
 
 RETURNS
 -------
-df (pandas.DataFrame): Formated dataframe.
+None
 
 RAISES
 ------
@@ -21,8 +24,8 @@ None
 # harmonize
 
 
-Harmonize the image through hed conversion, erase the color and keep the stains.
-Then match the histogram with a reference image.
+Harmonize the image through hed conversion, erase the color and keep
+the stains. Then match the histogram with a reference image.
 You can change the reference image calling update_ref_image function.
 
 PARAMETERS
@@ -53,7 +56,8 @@ Read a segment, harmonize it calling harmonize function, then save it.
 PARAMETERS
 ----------
 - src (str): Absolute path to the file that will be processed.
-- dstdir (str): Absolute path to the directory that should contain the new file.
+- dstdir (str): Absolute path to the directory that should contain the
+new file.
 
 RETURNS
 -------

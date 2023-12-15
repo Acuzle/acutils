@@ -1,13 +1,11 @@
-import shutil
-import os
-import re
-
-
-
-# A function prefixed with "tmnt" is a treatment function and must have those parameters:
+# Functions prefixed with "tmnt" are treatments and must have those parameters:
 #  - src: absolute path to the file that will be processed (str)
 #  - dstdir: absolute path to the directory that should contain new files (str)
-# Also, it shouldn't return anything.
+# Also, nothing should be returned.
+
+import os
+import re
+import shutil
 
 
 

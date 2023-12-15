@@ -1,3 +1,8 @@
+# Functions prefixed with "tmnt" are treatments and must have those parameters:
+#  - src: absolute path to the file that will be processed (str)
+#  - dstdir: absolute path to the directory that should contain new files (str)
+# Also, nothing should be returned.
+
 import os
 
 try:
@@ -6,12 +11,6 @@ except ImportError:
     print("|WRN| You must install 'opencv-python' (cv2) to use image module. "
           "Leaving.")
     exit()
-
-
-# A function prefixed with "tmnt" is a treatment function and must have those parameters:
-#  - src: absolute path to the file that will be processed (str)
-#  - dstdir: absolute path to the directory that should contain new files (str)
-# Also, it shouldn't return anything.
 
 
 

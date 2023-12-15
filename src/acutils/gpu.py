@@ -1,10 +1,3 @@
-# A function prefixed with "tmnt" is a treatment function and must have those parameters:
-#  - src: absolute path to the file that will be processed (str)
-#  - dstdir: absolute path to the directory that should contain new files (str)
-# Also, it shouldn't return anything.
-
-
-
 import os
 
 
@@ -15,11 +8,12 @@ def cupy_to_numpy(arr):
 
     PARAMETERS
     ----------
-    - arr (numpy.array or cupy.array): array to convert as numpy one (if not already).
+    - arr (numpy.array or cupy.array): array to convert as numpy one 
+    (if not already).
 
     RETURNS
     -------
-    convarr (numpy.array): converted array.
+    - convarr (numpy.array): converted array.
 
     RAISES
     ------
@@ -98,4 +92,4 @@ def select_device(device):
         try:
             aunp.cuda.Device(device).use()
         except AttributeError:
-            print("|WRN| Using CPU, for gpu computation call set_gpu_computation(activate=True).")
+            print(f"|WRN| Using CPU, can not select the device '{device}'")

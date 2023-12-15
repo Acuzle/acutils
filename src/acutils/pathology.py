@@ -1,12 +1,16 @@
-import cv2
+# Functions prefixed with "tmnt" are treatments and must have those parameters:
+#  - src: absolute path to the file that will be processed (str)
+#  - dstdir: absolute path to the directory that should contain new files (str)
+# Also, nothing should be returned.
+
 import math
 import numpy as np
 import os
 
 try:
-    from PIL import Image
+    import cv2
 except ImportError:
-    print("|WRN| You must install 'Pillow' to use pathology module. "
+    print("|WRN| You must install 'opencv-python' (cv2) to use pathology module. "
           "Leaving.")
     exit()
 
@@ -16,6 +20,13 @@ except ImportError:
     print("|WRN| You must install 'openslide-python' to use pathology module. "
           "Be careful, it also requires Openslide installation on your computer"
           ", the 'openslide-python' Python library is just a mapping. Leaving.")
+    exit()
+
+try:
+    from PIL import Image
+except ImportError:
+    print("|WRN| You must install 'Pillow' to use pathology module. "
+          "Leaving.")
     exit()
     
 try:
@@ -28,18 +39,9 @@ except ImportError:
 
 from . import gpu
 
-
-
-# A function prefixed with "tmnt" is a treatment function and must have those parameters:
-#  - src: absolute path to the file that will be processed (str)
-#  - dstdir: absolute path to the directory that should contain new files (str)
-# Also, it shouldn't return anything.
-
-
-
 Image.MAX_IMAGE_PIXELS = None
-import skimage as auski
 import numpy as aunp
+import skimage as auski
 gpu.set_gpu_computation() # if True import cucim.skimage as auski and cupy as aunp
 
 
@@ -47,41 +49,48 @@ gpu.set_gpu_computation() # if True import cucim.skimage as auski and cupy as au
 def update_ref_image(img_path=None):
     '''
     Change reference image using when calling harmonize function.
+    If you called `gpu.set_gpu_computation(activate=True)`, calling will load
+    the image on the GPU (using cupy instead of numpy).
     
     PARAMETERS
     ----------
-      img_path=None (str): Absolute path to the image that will be the reference to harmonize.
+    - img_path=None (str): Absolute path to the image that will be 
+    - the reference to harmonize.
     
     RETURNS
     -------
-      df (pandas.DataFrame): Formated dataframe.
+    None
     
     RAISES
     ------
     None
     '''
-    global REF_IMAGE, IHC_H_REF, IHC_E_REF, IHC_D_REF
+    global IHC_REF_IMAGE, IHC_H_REF, IHC_E_REF, IHC_D_REF
     if img_path is None:
-        REF_IMAGE = aunp.array(REF_IMAGE) # if called to switch from RAM to GPU
+        IHC_REF_IMAGE = aunp.array(IHC_REF_IMAGE) # for switching from CPU to GPU
     else:
-        REF_IMAGE = aunp.array(imread(img_path))
+        IHC_REF_IMAGE = aunp.array(imread(img_path))
     
-    ihc_hed = (auski.color.rgb2hed(REF_IMAGE))
+    ihc_hed = (auski.color.rgb2hed(IHC_REF_IMAGE))
     null = aunp.zeros_like(ihc_hed[:, :, 0])
-    IHC_H_REF = auski.color.hed2rgb(aunp.stack((ihc_hed[:, :, 0], null, null), axis=-1))
-    IHC_E_REF = auski.color.hed2rgb(aunp.stack((null, ihc_hed[:, :, 1], null), axis=-1))
-    IHC_D_REF = auski.color.hed2rgb(aunp.stack((null, null, ihc_hed[:, :, 2]), axis=-1))
+    IHC_H_REF = auski.color.hed2rgb(aunp.stack((ihc_hed[:, :, 0], null, null), 
+                                               axis=-1))
+    IHC_E_REF = auski.color.hed2rgb(aunp.stack((null, ihc_hed[:, :, 1], null),
+                                               axis=-1))
+    IHC_D_REF = auski.color.hed2rgb(aunp.stack((null, null, ihc_hed[:, :, 2]),
+                                               axis=-1))
 
 
-REF_IMAGE = skimgskin()
+
+IHC_REF_IMAGE = skimgskin()
 update_ref_image() # default ref image is skimage.data.skin()
 
 
 
 def harmonize(img):
     '''
-    Harmonize the image through hed conversion, erase the color and keep the stains.
-    Then match the histogram with a reference image.
+    Harmonize the image through hed conversion, erase the color and keep 
+    the stains. Then match the histogram with a reference image.
     You can change the reference image calling update_ref_image function.
     
     PARAMETERS
@@ -106,15 +115,18 @@ def harmonize(img):
     ihc_hed = (auski.color.rgb2hed(img))
     null = aunp.zeros_like(ihc_hed[:, :, 0])
 
-    ihc_h = auski.color.hed2rgb(aunp.stack((ihc_hed[:, :, 0], null, null), axis=-1))
+    ihc_h = auski.color.hed2rgb(
+                    aunp.stack((ihc_hed[:, :, 0], null, null), axis=-1))
     hist_h = auski.exposure.match_histograms(ihc_h, IHC_H_REF)
     del ihc_h
 
-    ihc_e = auski.color.hed2rgb(aunp.stack((null, ihc_hed[:, :, 1], null), axis=-1))
+    ihc_e = auski.color.hed2rgb(
+                    aunp.stack((null, ihc_hed[:, :, 1], null), axis=-1))
     hist_e = auski.exposure.match_histograms(ihc_e, IHC_E_REF)
     del ihc_e
 
-    ihc_d = auski.color.hed2rgb(aunp.stack((null, null, ihc_hed[:, :, 2]), axis=-1))
+    ihc_d = auski.color.hed2rgb(
+                    aunp.stack((null, null, ihc_hed[:, :, 2]), axis=-1))
     hist_d = auski.exposure.match_histograms(ihc_d, IHC_D_REF)
     del ihc_d, ihc_hed, null
     
@@ -130,7 +142,8 @@ def tmnt_harmonize(src, dstdir):
     PARAMETERS
     ----------
     - src (str): Absolute path to the file that will be processed.
-    - dstdir (str): Absolute path to the directory that should contain the new file.
+    - dstdir (str): Absolute path to the directory that should contain the 
+    new file.
     
     RETURNS
     -------
@@ -165,23 +178,30 @@ def get_preview(slide, lvl=-1, divider=None):
     None
     '''
     if divider is None:
-        preview = aunp.array(np.asarray(slide.get_thumbnail(slide.level_dimensions[lvl])))
+        preview = aunp.array(np.asarray(slide.get_thumbnail(
+                                            slide.level_dimensions[lvl])))
         
     else:
         width, height = slide.level_dimensions[lvl]
-        new_width, new_height = int(width/divider), int(height/divider) # slide will be scaled
-        amount = math.ceil(divider/4) # read area per area to avoid memory overload
+        new_width = int(width/divider)
+        new_height = int(height/divider)
+        amount = math.ceil(divider/4) # read area per area to avoid mem overload
 
-        w, h = int(width/amount), int(height/amount) # area with old scale
-        nw, nh = int(new_width/amount),  int(new_height/amount) # area with new scale
+        w, h = int(width/amount), int(height/amount) # old scale
+        nw, nh = int(new_width/amount),  int(new_height/amount) # new scale
         preview = aunp.zeros((new_height, new_width, 3), dtype=aunp.uint8) + 255
 
-        # Update prew divided area per divided area
+        # Update preview area per area
         for i in range(amount):
             for j in range(amount):
-                preview[j*nh:(j+1)*nh, i*nw:(i+1)*nw] = aunp.array(cv2.resize(
-                    np.array(slide.read_region((i*w,j*h), 0, (w, h)), dtype=np.uint8)[:,:,:3], 
-                    dsize=(nw, nh), interpolation=cv2.INTER_NEAREST))
+                preview[j*nh:(j+1)*nh, i*nw:(i+1)*nw] = aunp.array(
+                    cv2.resize(
+                        np.array(slide.read_region((i*w,j*h), 0, (w, h)), 
+                            dtype=np.uint8)[:,:,:3], 
+                        dsize=(nw, nh), 
+                        interpolation=cv2.INTER_NEAREST
+                    )
+                )
     return preview
 
 

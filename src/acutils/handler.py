@@ -15,8 +15,10 @@ class DataHandler:
 
         PARAMETERS
         ----------
-        - datapath (str): Absolute path to the directory that contain source files.
-        - file_extensions=None (array/list like of str): Source file allowed extensions.
+        - datapath (str): Absolute path to the directory that contain source 
+        files.
+        - file_extensions=None (array/list like of str): Source file allowed 
+        extensions.
         - allowed_cpus=1 (int): Maximum amount of cpus used to compute.
         - seed=871 (int): Seed used to initialize numpy randomizer.
     
@@ -26,10 +28,12 @@ class DataHandler:
         
         RAISES
         ------
-          NotADirectoryError: if the absolute path doesn't lead to an existing directory.
+        - NotADirectoryError: if the absolute path doesn't lead to an existing 
+        directory.
         '''
         if not os.path.isdir(datapath):
-            raise NotADirectoryError("datapath must be an absolute path to an existing directory")
+            raise NotADirectoryError("datapath must be an absolute path to an "
+                                     "existing directory")
         
         self.datapath = datapath
         self.file_extensions = file_extensions
@@ -40,22 +44,27 @@ class DataHandler:
         self.unique_labels = None
 
 
-    def _format_sheet(self, df, filecol=None, labelcol=None, othercols=None, clueless_words=None):
+    def _format_sheet(self, df, filecol=None, labelcol=None, othercols=None, 
+                      clueless_words=None):
         '''
-        Format a dataframe by deleting rows with empty cell, also add extension to filenames
-        if filename doesn't contain it already, and if there is only one extension.
+        Format a dataframe by deleting rows with empty cell, also add extension 
+        to filenames if filename doesn't contain it already, and if there is 
+        only one extension.
 
         PARAMETERS
         ----------
         - df (pandas.DataFrame): dataframe to format
-        - filecol=None (str): Name of the column that contains filenames, not used there.
-        - labelcol=None (str): Name of the column that contains labels, not used there.
+        - filecol=None (str): Name of the column that contains filenames, not 
+        used there.
+        - labelcol=None (str): Name of the column that contains labels, not 
+        used there.
         - othercols=None (list<str>): Name of the other columns, not used there.
-        - clueless_words=None (array/list like of str): Strings considered as None.
+        - clueless_words=None (array/list like of str): Strings considered as 
+        None.
 
         RETURNS
         -------
-          df (pandas.DataFrame): formated dataframe.
+        - df (pandas.DataFrame): formated dataframe.
     
         RAISES
         ------
@@ -70,18 +79,20 @@ class DataHandler:
 
         PARAMETERS
         ----------
-        - sheetpath (str): Absolute path to the sheet which contain information about data.
+        - sheetpath (str): Absolute path to the sheet which contain information 
+        about data.
         - filecol=None (str): Name of the column that contains filenames.
-        - labelcol=None (str): Name of the column that contains labels, not used here.
+        - labelcol=None (str): Name of the column that contains labels, not used 
+        here.
         - othercols=None (iterable of str): Name of the other columns to keep.
 
         RETURNS
         -------
-          df (pandas.DataFrame): Loaded dataframe.
+        - df (pandas.DataFrame): Loaded dataframe.
 
         RAISES
         ------
-          ValueError: If the file extension is not supported.
+        - ValueError: If the file extension is not supported.
         '''
         if othercols is None:
             othercols = []
@@ -90,16 +101,30 @@ class DataHandler:
         return sheet.read_df_from_any_avalaible_extensions(sheetpath)[cols]
 
 
-    # def load_labeled_data_fromsheet(self, sheetpath, filecol, labelcol, othercols=None, 
-    #         clueless_words=None):
+    # def load_labeled_data_fromsheet(self, sheetpath, filecol, labelcol, 
+    #                                 othercols=None, clueless_words=None):
     #     '''
     #     Load data files and labels from a sheet file.
-    #     \nPARAMETERS
-    #       sheetpath (str): absolute path to the sheet which contain information about data
-    #       filecol=None (str): name of the column that contains filenames
-    #       labelcol=None (str): name of the column that contains labels, not used here
-    #       othercols=None (array/list like of str): name of the other columns to keep
-    #       clueless_words=None (array/list like of str): strings considered as None
+
+    #     PARAMETERS
+    #     ----------
+    #     - sheetpath (str): absolute path to the sheet which contain information 
+    #     about data.
+    #     - filecol=None (str): name of the column that contains filenames.
+    #     - labelcol=None (str): name of the column that contains labels, not used 
+    #     here.
+    #     - othercols=None (array/list like of str): name of the other columns to 
+    #     keep.
+    #     - clueless_words=None (array/list like of str): strings considered as 
+    #     None.
+
+    #     RETURNS
+    #     -------
+    #     None
+
+    #     RAISES
+    #     ------
+    #     None
     #     '''
     #     # Load and format sheet
     #     df = self._load_sheet(sheetpath, filecol, labelcol, othercols)
@@ -133,26 +158,34 @@ class DataHandler:
         ------
         None
         '''
-        anyfile = (self.file_extensions is None 
-                   or len(self.file_extensions) == 0) # if no extension, keep any extensions
+        anyfile = (self.file_extensions is None # if no extension, keep any
+                   or len(self.file_extensions) == 0) 
         self.files = np.array([filename for filename in os.listdir(self.datapath) 
-                              if anyfile or filename.endswith(tuple(self.file_extensions))])
+                              if anyfile 
+                              or filename.endswith(tuple(self.file_extensions))])
 
 
     def load_labels_fromsheet(self, sheetpath, idcol, labelcol, 
-        othercols=None, clueless_words=None, delete_unlabeled_files=True):
+            othercols=None, clueless_words=None, delete_unlabeled_files=True):
         '''
         Load data labels from a sheet file. 
-        You must load files before calling this, you might call "load_data_fromdatapath".
+        You must load files before calling this, you might call 
+        "load_data_fromdatapath".
 
         PARAMETERS
         ----------
-        - sheetpath (str): Absolute path to the sheet which contain information about data.
-        - idcol=None (str): Name of the column that contains at least a part of the filename.
-        - labelcol=None (str): Name of the column that contains labels, not used here.
-        - othercols=None (array/list like of str): Name of the other columns to keep.
-        - clueless_words=None (array/list like of str): Strings considered as None.
-        - delete_unlabeled_files=True (bool): If True, delete each file without label.
+        - sheetpath (str): Absolute path to the sheet which contain information 
+        about data.
+        - idcol=None (str): Name of the column that contains at least a part of 
+        the filename.
+        - labelcol=None (str): Name of the column that contains labels, not used 
+        here.
+        - othercols=None (array/list like of str): Name of the other columns to 
+        keep.
+        - clueless_words=None (array/list like of str): Strings considered as 
+        None.
+        - delete_unlabeled_files=True (bool): If True, delete each file without 
+        label.
     
         RETURNS
         -------
@@ -197,7 +230,8 @@ class DataHandler:
     def load_labeled_data_fromdatapath(self):
         '''
         Load data files and labels from data directory.
-        Assuming that those files are inside subdirectories (named with unique labels).
+        Assuming that those files are inside subdirectories (named with unique 
+        labels).
 
         PARAMETERS
         ----------
@@ -213,23 +247,26 @@ class DataHandler:
         '''
         # Init arrays
         unique_labels = np.array([label for label in os.listdir(self.datapath) 
-                                  if os.path.isdir(os.path.join(self.datapath, label))])
+                            if os.path.isdir(os.path.join(self.datapath, label))])
         labels = np.array([], dtype='U')
         files = np.array([], dtype='U')
 
-        # Fill them label per label with founded files (if the extension is allowed)
-        anyfile = (self.file_extensions is None 
-                   or len(self.file_extensions) == 0) # if no extension, keep any extensions
+        # Fill them label per label with founded files (if the ext is allowed)
+        anyfile = (self.file_extensions is None # if no extension, keep any
+                   or len(self.file_extensions) == 0) 
         for i, label in enumerate(unique_labels):
-            incoming_files = np.array([os.path.join(label, filename) for filename in os.listdir(
-                    os.path.join(self.datapath, label)) if anyfile or filename.endswith(
-                                                            tuple(self.file_extensions))])
+            incoming_files = np.array(
+                [os.path.join(label, filename) for filename in os.listdir(
+                    os.path.join(self.datapath, label)) 
+                    if anyfile or filename.endswith(tuple(self.file_extensions)
+                )]
+            )
             if incoming_files.size == 0:
                 del unique_labels[i] # a label without data is useless
                 continue
             files = np.concatenate([files, incoming_files])
             labels = np.concatenate([labels, 
-                                np.repeat(np.array([label]), incoming_files.size)])
+                            np.repeat(np.array([label]), incoming_files.size)])
         
         # Update attributes only if not empty
         if files.size == 0 or labels.size == 0 or unique_labels.size == 0:
@@ -240,17 +277,23 @@ class DataHandler:
             self.files = files
     
 
-    def load_groups_fromsheet(self, sheetpath, idcol, groupcol, clueless_words=None):
+    def load_groups_fromsheet(self, sheetpath, idcol, groupcol, 
+                              clueless_words=None):
         '''
         Load data groups from a sheet file. 
-        You must load files before calling this, you might call "load_data_fromdatapath".
+        You must load files before calling this, you might call 
+        "load_data_fromdatapath".
 
         PARAMETERS
         ----------
-        - sheetpath (str): Absolute path to the sheet which contain information about data.
-        - idcol=None (str): Name of the column that contains at least a part of the filename.
-        - groupcol=None (str): Name of the column that contains groups, not used here.
-        - clueless_words=None (array/list like of str): Strings considered as None.
+        - sheetpath (str): Absolute path to the sheet which contain information 
+        about data.
+        - idcol=None (str): Name of the column that contains at least a part of 
+        the filename.
+        - groupcol=None (str): Name of the column that contains groups, not used 
+        here.
+        - clueless_words=None (array/list like of str): Strings considered as 
+        None.
     
         RETURNS
         -------
@@ -279,10 +322,12 @@ class DataHandler:
         # Get the group of each corresponding file (if avalaible)
         groups = np.empty(self.files.shape, dtype=f'U128')
         for i, filename in enumerate(self.files):
-            groups[i] = filename # in case no group found, filename becomes the group
+            groups[i] = filename # in case no group, filename becomes the group
             for filepart, group in zip(df[idcol].values, df[groupcol].values):
                 if filepart in filename:
-                    groups[i] = group if group not in clueless_words else filename
+                    groups[i] = (group 
+                                 if group not in clueless_words 
+                                 else filename)
                     break
         self.groups = groups
 
@@ -293,11 +338,13 @@ class DataHandler:
 
         PARAMETERS
         ----------
-        - data (dict<str,str>): Dictionary with filename as key and label as value.
+        - data (dict<str,str>): Dictionary with filename as key and label as 
+        value.
 
         RETURNS
         -------
-        - balanced_data (dict<str,str>): Data without superfluous files to balance it.
+        - balanced_data (dict<str,str>): Data without superfluous files to 
+        balance it.
         
         RAISES
         ------
@@ -305,11 +352,12 @@ class DataHandler:
         '''
         balanced_data = data.copy()
 
-        # Check how much data should be keeped (amout of the label with the less data)
+        # Check how much data should be keeped (amout of labels with less data)
         files = np.array(list(balanced_data.keys()))
         labels = np.array(list(balanced_data.values()))
-        lengths = np.array([np.where(labels == label)[0].size for label in self.unique_labels])
-        keeped_data = np.min(lengths[np.nonzero(lengths)]) # if no data, must be an error
+        lengths = np.array(
+             [np.where(labels == label)[0].size for label in self.unique_labels])
+        keeped_data = np.min(lengths[np.nonzero(lengths)]) # if no data, error
         
         # Balance data for each label
         for length, label in zip(lengths, self.unique_labels):
@@ -318,7 +366,8 @@ class DataHandler:
                 ids = np.where(labels == label)[0]
                 np.random.seed(self.seed) # so the balance is repeatable
                 np.random.shuffle(ids) # but still random
-                for filename in files[ids][:diff]: # delete "diff" files from this label
+                # delete "diff" files from this label
+                for filename in files[ids][:diff]:
                     del balanced_data[filename]
 
         return balanced_data
@@ -331,13 +380,17 @@ class DataHandler:
 
         PARAMETERS
         ----------
-        - tdata (dict<str,str>): Train dictionary with filename as key and label as value.
-        - vdata (dict<str,str>): Val dictionary with filename as key and label as value.
+        - tdata (dict<str,str>): Train dictionary with filename as key and label 
+        as value.
+        - vdata (dict<str,str>): Val dictionary with filename as key and label 
+        as value.
 
         RETURNS
         -------
-        - balanced_tdata (dict<str,str>): Train data without superfluous files to balance it.
-        - balanced_vdata (dict<str,str>): Val data without superfluous files to balance it.
+        - balanced_tdata (dict<str,str>): Train data without superfluous files 
+        to balance it.
+        - balanced_vdata (dict<str,str>): Val data without superfluous files to 
+        balance it.
     
         RAISES
         ------
@@ -353,22 +406,27 @@ class DataHandler:
 
         PARAMETERS
         ----------
-        - train_percentage=0.7 (float): Percentage of data expected in train dataset.
-        - balance=False (bool): Do call "balance_datasets" method before returning dictionaries.
+        - train_percentage=0.7 (float): Percentage of data expected in train 
+        dataset.
+        - balance=False (bool): Do call "balance_datasets" method before 
+        returning dictionaries.
 
         RETURNS
         -------
-        - tdata (dict<str,str>): train dictionary with filename as key and label as value.
-        - vdata (dict<str,str>): val dictionary with filename as key and label as value.
+        - tdata (dict<str,str>): train dictionary with filename as key and label 
+        as value.
+        - vdata (dict<str,str>): val dictionary with filename as key and label 
+        as value.
         
         RAISES
         ------
         None
         '''
-        if self.files is None or self.labels is None or self.unique_labels is None:
+        if (self.files is None or self.labels is None 
+            or self.unique_labels is None):
             print('|WRN| Load labeled data before calling "split". '
-                  '"files", "labels" and "unique_labels" attributes should not be None. '
-                  'Leaving.')
+                  '"files", "labels" and "unique_labels" attributes should '
+                  'not be None. Leaving.')
             return None
         
         if train_percentage < 0 or train_percentage > 1:
@@ -376,24 +434,31 @@ class DataHandler:
             return None
 
         # Init arrays to store train/val files and labels
-        train_files, train_labels = np.array([], dtype='U'), np.array([], dtype='U')
-        val_files, val_labels = np.array([], dtype='U'), np.array([], dtype='U')
+        train_files = np.array([], dtype='U')
+        train_labels = np.array([], dtype='U')
+        val_files = np.array([], dtype='U')
+        val_labels = np.array([], dtype='U')
         val_percentage = 1 - train_percentage
 
-        # Fill train/val files and labels label per label referring to train_percentage
+        # Fill train/val files/labels lab per lab referring to train_percentage
         for label in self.unique_labels:
             ids = np.where(self.labels == label)[0]
             np.random.seed(self.seed) # so the split is repeatable
             np.random.shuffle(ids) # but still random
             startsat = int(np.ceil(ids.size*val_percentage))
-            train_files = np.concatenate([train_files, self.files[ids[startsat:]]])
-            train_labels = np.concatenate([train_labels, self.labels[ids[startsat:]]])
+            train_files = np.concatenate([train_files, 
+                                          self.files[ids[startsat:]]])
+            train_labels = np.concatenate([train_labels, 
+                                           self.labels[ids[startsat:]]])
             val_files = np.concatenate([val_files, self.files[ids[:startsat]]])
             val_labels = np.concatenate([val_labels, self.labels[ids[:startsat]]])
         
-        # Store files and labels inside dictionaries (tdata for train, vdata for val)
-        tdata = {filename: label for filename, label in zip(train_files, train_labels)}
-        vdata = {filename: label for filename, label in zip(val_files, val_labels)}
+        # Store files and labels inside dictionaries (tdata for train,
+        # vdata for val)
+        tdata = {filename: label for filename, label in 
+                                        zip(train_files, train_labels)}
+        vdata = {filename: label for filename, label in 
+                                        zip(val_files, val_labels)}
 
         # Balance datasets (if required)
         if balance:
@@ -408,22 +473,27 @@ class DataHandler:
 
         PARAMETERS
         ----------
-        - train_percentage=0.7 (float): Percentage of data expected in train dataset.
-        - balance=False (bool): Do call "balance_datasets" method before returning dictionaries.
+        - train_percentage=0.7 (float): Percentage of data expected in train 
+        dataset.
+        - balance=False (bool): Do call "balance_datasets" method before 
+        returning dictionaries.
 
         RETURNS
         -------
-        - tdata (dict<str,str>): Train dictionary with filename as key and label as value.
-        - vdata (dict<str,str>): Val dictionary with filename as key and label as value.
+        - tdata (dict<str,str>): Train dictionary with filename as key and label 
+        as value.
+        - vdata (dict<str,str>): Val dictionary with filename as key and label as 
+        value.
         
         RAISES
         ------
         None
         '''
-        if self.files is None or self.labels is None or self.unique_labels is None:
+        if (self.files is None or self.labels is None 
+            or self.unique_labels is None):
             print('|WRN| Load labeled data before calling "split". '
-                  '"files", "labels" and "unique_labels" attributes shouldn\'t be None. '
-                  'Leaving.')
+                  '"files", "labels" and "unique_labels" attributes should not '
+                  'be None. Leaving.')
             return None
         
         if self.groups is None:
@@ -438,12 +508,13 @@ class DataHandler:
         train_files, train_labels = [], []
         val_files, val_labels = [], []
 
-        # Fill train/val files and labels label per label referring to train_percentage
+        # Fill train/val files/labels lab per lab referring to train_percentage
         for label in self.unique_labels:
             # Get groups for data with this label
             iftl = np.where(self.labels == label)[0] # indices for this label
-            unique_groups, _, counts = np.unique(self.groups[iftl], return_index=True, 
-                                           return_counts=True)
+            unique_groups, _, counts = np.unique(self.groups[iftl], 
+                                                 return_index=True, 
+                                                 return_counts=True)
 
             # Shuffle to split it randomly
             np.random.seed(self.seed) # so the split is repeatable
@@ -456,7 +527,7 @@ class DataHandler:
             train_cap = train_percentage * iftl.shape[0]
             for i in browsing_order:
                 positions = np.where(self.groups[iftl] == unique_groups[i])[0]
-                for pos in positions: # contains each file index of the same group
+                for pos in positions: # contains each file index of the same grp
                     if quantity <= train_cap:
                         train_files.append(self.files[iftl][pos])
                         train_labels.append(self.labels[iftl][pos])
@@ -465,9 +536,12 @@ class DataHandler:
                         val_labels.append(self.labels[iftl][pos])
                 quantity += counts[i]
         
-        # Store files and labels inside dictionaries (tdata for train, vdata for val)
-        tdata = {filename: label for filename, label in zip(train_files, train_labels)}
-        vdata = {filename: label for filename, label in zip(val_files, val_labels)}
+        # Store files and labels inside dictionaries (tdata for train, 
+        # vdata for val)
+        tdata = {filename: label for filename, label in 
+                                        zip(train_files, train_labels)}
+        vdata = {filename: label for filename, label in 
+                                        zip(val_files, val_labels)}
 
         # Balance datasets (if required)
         if balance:
@@ -487,8 +561,10 @@ class DataHandler:
 
         RETURNS
         -------
-        - packed_srcs (list<list<str>>): Source files absolute paths per process.
-        - packed_dstdirs (list<list<str>>): Destination directories absolute paths per process.
+        - packed_srcs (list<list<str>>): Source files absolute paths per 
+        process.
+        - packed_dstdirs (list<list<str>>): Destination directories absolute 
+        paths per process.
         
         RAISES
         ------
@@ -496,12 +572,14 @@ class DataHandler:
         '''
         # Update destination directory with labels (if defined)
         if self.labels is not None:
-            dstdirs = np.array([os.path.join(dirpath, label) for label in self.labels])
+            dstdirs = np.array(
+                [os.path.join(dirpath, label) for label in self.labels])
         else:
             dstdirs = np.array([dirpath for _ in range(self.files.size)])
           
         # Take file absolute paths
-        srcs = np.array([os.path.join(self.datapath, filename) for filename in self.files])
+        srcs = np.array(
+            [os.path.join(self.datapath, filename) for filename in self.files])
         
         # Pack src files and directories for multiprocessing
         packed_srcs, packed_dstdirs = multiprocess.distribute(srcs,
@@ -516,15 +594,20 @@ class DataHandler:
 
         PARAMETERS
         ----------
-        - tdstdir (str): Absolute path to the destination files directory for train dataset.
-        - vdstdir (str): Absolute path to the destination files directory for val dataset.
-        - tdata (dict<str,str>): Train dictionary with filename as key and label as value.
-        - vdata (dict<str,str>): Val dictionary with filename as key and label as value.
+        - tdstdir (str): Absolute path to the destination files directory for 
+        train dataset.
+        - vdstdir (str): Absolute path to the destination files directory for 
+        val dataset.
+        - tdata (dict<str,str>): Train dictionary with filename as key and label 
+        as value.
+        - vdata (dict<str,str>): Val dictionary with filename as key and label 
+        as value.
 
         RETURNS
         -------
         - packed_srcs (list<list<str>>): Src files absolute paths per process.
-        - packed_dstdirs (list<list<str>>): Destination directories absolute paths per process.
+        - packed_dstdirs (list<list<str>>): Destination directories absolute 
+        paths per process.
     
         RAISES
         ------
@@ -547,19 +630,22 @@ class DataHandler:
 
     def _run_processes(self, packed_srcs, packed_dstdirs, func, **kwargs):
         '''
-        Run processes on the maximum amount of allowed cpus to apply "func" function to each
-        source file.
-        "func" needs "src" and "dstdir" params (in acutils, those are prefixed with "tmnt").
+        Run processes on the maximum amount of allowed cpus to apply "func" 
+        function to each source file.
+        "func" needs "src" and "dstdir" params (in acutils, those are 
+        prefixed with "tmnt").
         **kwargs should be addionnal arguments to pass to the "func" function.
 
         PARAMETERS
         ----------
-        - packed_srcs (array/list like of iterables of str): src files absolute paths per process.
-        - packed_dstdirs (array/list like of iterables of str): dst dirs absolute paths per process.
+        - packed_srcs (array/list like of iterables of str): src files absolute 
+        paths per process.
+        - packed_dstdirs (array/list like of iterables of str): dst dirs 
+        absolute paths per process.
         - func (function): Treatment that will be applied on each source file
-                           it needs an absolute path to the source file "src" 
-                           and absolute absolute path to destination files directory "dstdir"
-                           in acutils, any function prefixed with "tmnt" is usable
+        it needs an absolute path to the source file "src" and absolute 
+        absolute path to destination files directory "dstdir" in acutils, 
+        any function prefixed with "tmnt" is usable.
         - **kwargs: Arguments to pass to the "func" function.
     
         RETURNS
@@ -596,19 +682,19 @@ class DataHandler:
 
     def process(self, dirpath, func=None, empty_dir=True, **kwargs):
         '''
-        Run processes on the maximum amount of allowed cpus to apply "func" function to each
-        source file.
-        "func" needs "src" and "dstdir" params (in acutils, those are prefixed with "tmnt").
+        Run processes on the maximum amount of allowed cpus to apply "func" 
+        function to each source file. If "func" is None, just copy the file.
+        "func" needs "src" and "dstdir" params (in acutils, those are 
+        prefixed with "tmnt").
         **kwargs should be addionnal arguments to pass to the "func" function.
 
         PARAMETERS
         ----------
         - dirpath (str): Absolute path to treated files directory.
-        - func=None (function): Treatment that will be applied on each source file.
-                                it needs an absolute path to the source file "src" 
-                                and absolute absolute path to destination files directory "dstdir"
-                                if None, source files will be copied to the destination directory
-                                in acutils, any function prefixed with "tmnt" is usable.
+        - func=None (function): Treatment that will be applied on each source 
+        file it needs an absolute path to the source file "src" and absolute 
+        absolute path to destination files directory "dstdir" in acutils,any 
+        function prefixed with "tmnt" is usable.
         - empty_dir=True (bool): If True, reset destination directory and fill it with unique labels
                           as subdirectories if defined
         - **kwargs: Arguments to pass to the "func" function.
@@ -634,10 +720,11 @@ class DataHandler:
         self._run_processes(packed_srcs, packed_dstdirs, func, **kwargs)
 
 
-    def make_datasets(self, trainpath, valpath, tdata, vdata, func=None, empty_dir=True, **kwargs):
+    def make_datasets(self, trainpath, valpath, tdata, vdata, func=None, 
+                      empty_dir=True, **kwargs):
         '''
-        Run processes on the maximum amount of allowed cpus to apply "func" function to each
-        source file.
+        Run processes on the maximum amount of allowed cpus to apply "func" 
+        function to each source file.
         "func" needs "src" and "dstdir" params (in acutils, those are prefixed with "tmnt").
         **kwargs should be addionnal arguments to pass to the "func" function.
 
@@ -645,15 +732,16 @@ class DataHandler:
         ----------
         - trainpath (str): Absolute path to the destination files train directory.
         - valpath (str): Absolute path to the destination files val directory.
-        - tdata (dict<str,str>): Train dictionary with filename as key and label as value.
-        - vdata (dict<str,str>): Val dictionary with filename as key and label as value.
-        - func=None (function): Treatment that will be applied on each source file
-                                it needs an absolute path to the source file "src" 
-                                and absolute absolute path to destination files directory "dstdir"
-                                if None, source files will be copied to the destination directory
-                                in acutils, any function prefixed with "tmnt" is usable.
-        - empty_dir=True (bool): If True, reset destination directories and fill it with unique labels
-                                 as subdirectories if defined.
+        - tdata (dict<str,str>): Train dictionary with filename as key and label 
+        as value.
+        - vdata (dict<str,str>): Val dictionary with filename as key and label 
+        as value.
+        - func=None (function): Treatment that will be applied on each source 
+        file it needs an absolute path to the source file "src" and absolute 
+        absolute path to destination files directory "dstdir" in acutils,any 
+        function prefixed with "tmnt" is usable.
+        - empty_dir=True (bool): If True, reset destination directories and fill 
+        it with unique labels as subdirectories if defined.
         - **kwargs: Arguments to pass to the "func" function.
     
         RETURNS
@@ -674,5 +762,6 @@ class DataHandler:
             self._reset_directory(valpath)
 
         # Distribute files between cpus and run processes
-        packed_srcs, packed_dstdirs = self._distribute_datasets(trainpath, valpath, tdata, vdata)
+        packed_srcs, packed_dstdirs = self._distribute_datasets(trainpath, 
+                                                    valpath, tdata, vdata)
         self._run_processes(packed_srcs, packed_dstdirs, func, **kwargs)

@@ -1,29 +1,32 @@
+# Functions prefixed with "tmnt" are treatments and must have those parameters:
+#  - src: absolute path to the file that will be processed (str)
+#  - dstdir: absolute path to the directory that should contain new files (str)
+# Also, nothing should be returned.
+
 import pandas as pd
 
 
 
-# A function prefixed with "tmnt" is a treatment function and must have those parameters:
-#  - src: absolute path to the file that will be processed (str)
-#  - dstdir: absolute path to the directory that should contain new files (str)
-# Also, it shouldn't return anything.
-
 # @TODO Maybe update functions using df.isin() for masks.
-
 def delete_clueless_rows(df, clueless_words=None, columns=None, inplace=False):
     '''
     Delete rows of a Pandas DataFrame based on the values in clueless_words.
-    Delete each row that have any empty cell or any cell that contain a clueless_word.
-    If columns argument is specified, only those columns will be concerned.
+    Delete each row that have any empty cell or any cell that contain a 
+    clueless_word. If columns argument is specified, only those columns 
+    will be concerned.
     
     PARAMETERS
     ----------
     - df (pandas.DataFrame): The DataFrame to filter.
-    - clueless_words=None (list<str>): Any cell containing a word of the list is treated as empty.
+    - clueless_words=None (list<str>): Any cell containing a word of the list 
+    is treated as empty.
     - columns=None (list<str>): Columns considered for the deletion.
-    - inplace=False (bool): If True, the DataFrame will be modified in place, else it is returned.
+    - inplace=False (bool): If True, the DataFrame will be modified in place, 
+    else it is returned.
     
     RETURNS
-    - df=None (pandas.DataFrame): Filtered copy of passed df, if inplace==True returns None.
+    - df=None (pandas.DataFrame): Filtered copy of passed df, 
+    if inplace==True returns None.
     
     RAISES
     ------
@@ -36,7 +39,8 @@ def delete_clueless_rows(df, clueless_words=None, columns=None, inplace=False):
         columns = df.columns
 
     # Create a mask that is True for rows that should be retained
-    mask = df[columns].applymap(lambda x: x not in clueless_words and x is not None)
+    mask = df[columns].applymap(
+        lambda x: x not in clueless_words and x is not None)
 
     # If inplace is True, update the DataFrame in place
     if inplace:
@@ -45,12 +49,14 @@ def delete_clueless_rows(df, clueless_words=None, columns=None, inplace=False):
         return df[mask]
 
 
+
 # @TODO pd.read_table might be the same function (but better).
 # https://pandas.pydata.org/docs/reference/api/pandas.read_table.html
 def read_df_from_any_avalaible_extensions(sheetpath):
     '''
     Load a Pandas DataFrame from a file.
-    Avalaible extensions: csv, txt, xls, xlsx, feather, parquet, hdf5, sas7bdat, stata, pickle.
+    Avalaible extensions: csv, txt, xls, xlsx, feather, parquet, 
+    hdf5, sas7bdat, stata, pickle.
 
     PARAMETERS
     ----------
@@ -92,13 +98,16 @@ def add_suffix_to_cells_from_a_column(df, suffix, columns, inplace=False):
     PARAMETERS
     ----------
     - df (pandas.DataFrame): The DataFrame to modify.
-    - suffix (str): The string to concatenate with the values in the specified columns.
+    - suffix (str): The string to concatenate with the values in the specified 
+    columns.
     - columns (list): A list of column names to concatenate with the string.
-    - inplace=False (bool): If True, the DataFrame will be modified in place, else it is returned.
+    - inplace=False (bool): If True, the DataFrame will be modified in place, 
+    else it is returned.
     
     RETURNS
     -------
-    - df=None (pandas.DataFrame): Modified copy of passed df, if inplace==True returns None.
+    - df=None (pandas.DataFrame): Modified copy of passed df, if inplace==True 
+    returns None.
     
     RAISES
     ------
