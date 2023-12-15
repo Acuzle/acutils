@@ -5,6 +5,10 @@
 
 
 
+import os
+
+
+
 def cupy_to_numpy(arr):
     '''
     Return a numpy.array from a cupy.array or a numpy.array.
@@ -30,8 +34,8 @@ def cupy_to_numpy(arr):
 
 def set_gpu_computation(activate=True):
     '''
-    Enable or disable gpu computation. To enable it, cupy and cucim modules are needed.
-    It changes import as auski and aunp.
+    Enable or disable gpu computation. To enable it, cupy and cucim modules
+    are needed, it changes import as auski and aunp.
 
     PARAMETERS
     ----------
@@ -48,12 +52,26 @@ def set_gpu_computation(activate=True):
     global auski, aunp # strange names to avoid conflicts
     if activate == True:
         try:
+            cuda_visible_devices = os.environ.get("CUDA_VISIBLE_DEVICES", "")
+            if not cuda_visible_devices:
+                raise LookupError("CUDA_VISIBLE_DEVICES is not set."
+                            "Valid example: export CUDA_VISIBLE_DEVICES=1,3,0")
+
+            visible_devices_list = cuda_visible_devices.split(',')
+            if (len(visible_devices_list) <= 0):
+                raise LookupError("CUDA_VISIBLE_DEVICES value is not valid. "
+                            "Valid example: export CUDA_VISIBLE_DEVICES=1,3,0")
             import cucim.skimage as auski
             import cupy as aunp
-        except ImportError:
+            aunp.cuda.Device(visible_devices_list[0]).use()
+            print(f"Device '{visible_devices_list[0]}' selected for "
+                  "GPU computation.")
+
+        except Exception as err:
+            print(err)
+            print("|WRN| Using CPU, cucim or cupy not available.")
             import skimage as auski
             import numpy as aunp
-            print("|WRN| Using CPU, cucim or cupy not available.")
     else:
         import skimage as auski
         import numpy as aunp
