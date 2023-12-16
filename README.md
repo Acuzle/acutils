@@ -2,7 +2,7 @@
 
 **Python library providing a robust pipeline for data processing tasks.**
 
-The acutils library is designed to facilitate data processing tasks, particularly for individuals dealing with custom data preprocessing before building machine learning algorithms. It has been utilized in various domains, including pathology image processing, custom segmentation, and frame extractions from videos.
+The acutils library is designed to facilitate data processing tasks, especially for individuals dealing with custom data preprocessing before building machine learning algorithms. It has been used in various domains, including pathology image processing, custom segmentation, and frame extractions from videos.
 
 HERE ARE THE [DOCUMENTATION FILES](./doc).
 
@@ -93,7 +93,7 @@ Finally, the **pathology** module requires you to install [Openslide](https://op
 
 ### GPU computation
 
-For now, this is only used in **pathology** modules (because the process take a while).
+For now, this is only used in **pathology** module (because the process takes a while).
 
 - `cupy`: numpy but using GPU.
 - `cucim`: includes cucim.skimage that is skimage (older version) using GPU.
@@ -102,12 +102,12 @@ For now, this is only used in **pathology** modules (because the process take a 
 pip install cupy cucim
 ```
 
-Make you CUDA install usable from cupy:
+Make your CUDA install locatable from cupy:
 ```bash
 export LD_LIBRARY_PATH=/path/to/cudnn/lib:$LD_LIBRARY_PATH
 ```
 
-Choose at least one device (if multiple, we take the first):
+Choose at least one device (if multiple, the first is taken):
 ```bash
 export CUDA_VISIBLE_DEVICES=0
 ```
@@ -125,7 +125,7 @@ Use the relevant modules from acutils based on your data processing needs:
 - **multiprocess**: Multiprocessing and process management.
 - **pathology**: Pathology data processing for segmentation and tiling.
 - **sheet**: Handling pandas DataFrames.
-- **video**: Video data processing.
+- **video**: Computer Vision tasks on Videos.
 
 Refer to the [documentation files](./doc) and code [examples](./examples) for detailed usage instructions.
 
