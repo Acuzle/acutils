@@ -159,7 +159,7 @@ PARAMETERS
 - src (str): Absolute path to the slide.
 - lvl (int): Slide level taken.
 - divider=None (float): Scale the preview by dividing the slide.
-- device=None (int): Taken gpu.
+- device=None (int): Taken GPU.
 
 RETURNS
 -------
@@ -184,7 +184,7 @@ PARAMETERS
 - lvl (int): Slide level taken.
 - divider=None (float): Scale the preview by dividing the slide.
 - ext="png" (str): Saved preview extension.
-- device=None (int): Taken gpu.
+- device=None (int): Taken GPU.
 
 RETURNS
 -------
@@ -211,7 +211,7 @@ PARAMETERS
 - do_harmonize=False (bool): Harmonize slices using harmonize function.
 - divider=None (float): Scale the preview by dividing the slide.
 - ext="png" (str): Saved segments extension.
-- device=None (int): Taken gpu.
+- device=None (int): Taken GPU.
 
 RETURNS
 -------

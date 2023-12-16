@@ -19,7 +19,7 @@ class DataHandler:
         files.
         - file_extensions=None (array/list like of str): Source file allowed 
         extensions.
-        - allowed_cpus=1 (int): Maximum amount of cpus used to compute.
+        - allowed_cpus=1 (int): Maximum amount of CPUs used to compute.
         - seed=871 (int): Seed used to initialize numpy randomizer.
     
         RETURNS
@@ -630,7 +630,7 @@ class DataHandler:
 
     def _run_processes(self, packed_srcs, packed_dstdirs, func, **kwargs):
         '''
-        Run processes on the maximum amount of allowed cpus to apply "func" 
+        Run processes on the maximum amount of allowed CPUs to apply "func" 
         function to each source file.
         "func" needs "src" and "dstdir" params (in acutils, those are 
         prefixed with "tmnt").
@@ -682,7 +682,7 @@ class DataHandler:
 
     def process(self, dirpath, func=None, empty_dir=True, **kwargs):
         '''
-        Run processes on the maximum amount of allowed cpus to apply "func" 
+        Run processes on the maximum amount of allowed CPUs to apply "func" 
         function to each source file. If "func" is None, just copy the file.
         "func" needs "src" and "dstdir" params (in acutils, those are 
         prefixed with "tmnt").
@@ -715,7 +715,7 @@ class DataHandler:
         if empty_dir:
             self._reset_directory(dirpath)
 
-        # Distribute files between cpus and run processes
+        # Distribute files between CPUs and run processes
         packed_srcs, packed_dstdirs = self._distribute_data(dirpath)
         self._run_processes(packed_srcs, packed_dstdirs, func, **kwargs)
 
@@ -723,7 +723,7 @@ class DataHandler:
     def make_datasets(self, trainpath, valpath, tdata, vdata, func=None, 
                       empty_dir=True, **kwargs):
         '''
-        Run processes on the maximum amount of allowed cpus to apply "func" 
+        Run processes on the maximum amount of allowed CPUs to apply "func" 
         function to each source file.
         "func" needs "src" and "dstdir" params (in acutils, those are prefixed with "tmnt").
         **kwargs should be addionnal arguments to pass to the "func" function.
@@ -761,7 +761,7 @@ class DataHandler:
             self._reset_directory(trainpath)
             self._reset_directory(valpath)
 
-        # Distribute files between cpus and run processes
+        # Distribute files between CPUs and run processes
         packed_srcs, packed_dstdirs = self._distribute_datasets(trainpath, 
                                                     valpath, tdata, vdata)
         self._run_processes(packed_srcs, packed_dstdirs, func, **kwargs)

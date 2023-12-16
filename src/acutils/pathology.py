@@ -307,7 +307,7 @@ def load_slice_preview_and_ext(src, lvl, divider=None, device=None):
     - src (str): Absolute path to the slide.
     - lvl (int): Slide level taken.
     - divider=None (float): Scale the preview by dividing the slide.
-    - device=None (int): Taken gpu.
+    - device=None (int): Taken GPU.
 
     RETURNS
     -------
@@ -338,7 +338,7 @@ def tmnt_save_preview_from_slide(src, dstdir, lvl, divider=None, ext="png", devi
     - lvl (int): Slide level taken.
     - divider=None (float): Scale the preview by dividing the slide.
     - ext="png" (str): Saved preview extension.
-    - device=None (int): Taken gpu.
+    - device=None (int): Taken GPU.
     
     RETURNS
     -------
@@ -370,7 +370,7 @@ def tmnt_save_segments_from_slide(src, dstdir, lvlpreview, lvlsegment, fpval, si
     - do_harmonize=False (bool): Harmonize slices using harmonize function.
     - divider=None (float): Scale the preview by dividing the slide.
     - ext="png" (str): Saved segments extension.
-    - device=None (int): Taken gpu.
+    - device=None (int): Taken GPU.
     
     RETURNS
     -------

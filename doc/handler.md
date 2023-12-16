@@ -11,7 +11,7 @@ PARAMETERS
 files.
 - file_extensions=None (array/list like of str): Source file allowed
 extensions.
-- allowed_cpus=1 (int): Maximum amount of cpus used to compute.
+- allowed_cpus=1 (int): Maximum amount of CPUs used to compute.
 - seed=871 (int): Seed used to initialize numpy randomizer.
 
 RETURNS
@@ -317,7 +317,7 @@ None
 # _run_processes
 
 
-Run processes on the maximum amount of allowed cpus to apply "func"
+Run processes on the maximum amount of allowed CPUs to apply "func"
 function to each source file.
 "func" needs "src" and "dstdir" params (in acutils, those are
 prefixed with "tmnt").
@@ -366,7 +366,7 @@ None
 # process
 
 
-Run processes on the maximum amount of allowed cpus to apply "func"
+Run processes on the maximum amount of allowed CPUs to apply "func"
 function to each source file. If "func" is None, just copy the file.
 "func" needs "src" and "dstdir" params (in acutils, those are
 prefixed with "tmnt").
@@ -395,7 +395,7 @@ None
 # make_datasets
 
 
-Run processes on the maximum amount of allowed cpus to apply "func"
+Run processes on the maximum amount of allowed CPUs to apply "func"
 function to each source file.
 "func" needs "src" and "dstdir" params (in acutils, those are prefixed with "tmnt").
 **kwargs should be addionnal arguments to pass to the "func" function.

@@ -36,7 +36,7 @@ def _process_func_on_multiple_files(srcs, dstdirs, func, **kwargs):
 def run_processes_on_multiple_files(packed_srcs, packed_dstdirs, func, 
                                     allowed_cpus=1, **kwargs):
     '''
-    Run processes on the maximum amount of allowed cpus to apply "func" function 
+    Run processes on the maximum amount of allowed CPUs to apply "func" function 
     to each source file. 
     "func" needs "src" and "dstdir" params (in acutils, those are prefixed with 
     "tmnt").
@@ -51,7 +51,7 @@ def run_processes_on_multiple_files(packed_srcs, packed_dstdirs, func,
     needs an absolute path to the source file "src" and absolute absolute path 
     to destination files directory "dstdir" in acutils, any function prefixed 
     with "tmnt" is usable.
-    - allowed_cpus=1 (int): Maximum amount of cpus used to compute.
+    - allowed_cpus=1 (int): Maximum amount of CPUs used to compute.
     - **kwargs: Arguments to pass to the "func" function.
     
     RETURNS
@@ -73,14 +73,14 @@ def run_processes_on_multiple_files(packed_srcs, packed_dstdirs, func,
 
 def distribute(srcs, dstdirs, allowed_cpus=1, seed=871):
     '''
-    Distribute files to process and split them between allowed cpus.
+    Distribute files to process and split them between allowed CPUs.
     The distribution is returned as 2 lists of lists of src or dstdir.
 
     PARAMETERS
     ----------
     - srcs (array/list like of str): Source files.
     - dstdirs (array/list like of str): Destination directories.
-    - allowed_cpus=1 (int): Maximum amount of cpus used to compute.
+    - allowed_cpus=1 (int): Maximum amount of CPUs used to compute.
     - seed=871 (int): Seed used to initialize numpy randomizer.
 
     RETURNS
@@ -99,7 +99,7 @@ def distribute(srcs, dstdirs, allowed_cpus=1, seed=871):
     if type(dstdirs) is not np.array:
         dstdirs = np.array(dstdirs)
 
-    # Split srcs and dstdirs between allowed cpus (to return this as lists)
+    # Split srcs and dstdirs between allowed CPUs (to return this as lists)
     packed_srcs = []
     packed_dstdirs = []
     for ids in np.array_split(np.arange(srcs.size), int(allowed_cpus)):

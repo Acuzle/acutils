@@ -20,7 +20,7 @@ def cupy_to_numpy(arr):
     None
     '''
     try:
-        return arr.get() # if using gpu (cupy)
+        return arr.get() # if using GPU (cupy)
     except AttributeError:
         return arr
 
@@ -28,12 +28,12 @@ def cupy_to_numpy(arr):
 
 def set_gpu_computation(activate=True):
     '''
-    Enable or disable gpu computation. To enable it, cupy and cucim modules
+    Enable or disable GPU computation. To enable it, cupy and cucim modules
     are needed, it changes import as auski and aunp.
 
     PARAMETERS
     ----------
-    - activate=False (bool): activate or not gpu computation.
+    - activate=False (bool): activate or not GPU computation.
 
     RETURNS
     -------
@@ -74,11 +74,11 @@ def set_gpu_computation(activate=True):
 
 def select_device(device):
     '''
-    Select device used for some gpu computations of the current process.
+    Select device used for some GPU computations of the current process.
 
     PARAMETERS
     ----------
-    - device (int or None): selected gpu (if None, does nothing).
+    - device (int or None): selected GPU (if None, does nothing).
 
     RETURNS
     -------
