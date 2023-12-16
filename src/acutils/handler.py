@@ -429,75 +429,7 @@ class DataHandler:
         return self._balance_dataset(tdata), self._balance_dataset(vdata)
 
 
-    # @TODO maybe add an optional val_percentage and define a test set
-    def split(self, train_percentage=0.7, balance=False):
-        '''
-        Split labeled data into train and test datasets.
-
-        PARAMETERS
-        ----------
-        - train_percentage=0.7 (float): Percentage of data expected in train 
-        dataset.
-        - balance=False (bool): Do call "balance_datasets" method before 
-        returning dictionaries.
-
-        RETURNS
-        -------
-        - tdata (dict<str,str>): train dictionary with filename as key and label 
-        as value.
-        - vdata (dict<str,str>): val dictionary with filename as key and label 
-        as value.
-        
-        RAISES
-        ------
-        None
-        '''
-        if (self.files is None or self.labels is None 
-            or self.unique_labels is None):
-            print('|WRN| Load labeled data before calling "split". '
-                  '"files", "labels" and "unique_labels" attributes should '
-                  'not be None. Leaving.')
-            return None
-        
-        if train_percentage < 0 or train_percentage > 1:
-            print('|WRN| Should be: 0.00 <= "train_percentage" <= 1.00. Leaving.')
-            return None
-
-        # Init arrays to store train/val files and labels
-        train_files = np.array([], dtype=self.str_ndarray_dtype)
-        train_labels = np.array([], dtype=self.str_ndarray_dtype)
-        val_files = np.array([], dtype=self.str_ndarray_dtype)
-        val_labels = np.array([], dtype=self.str_ndarray_dtype)
-        val_percentage = 1 - train_percentage
-
-        # Fill train/val files/labels lab per lab referring to train_percentage
-        for label in self.unique_labels:
-            ids = np.where(self.labels == label)[0]
-            np.random.seed(self.seed) # so the split is repeatable
-            np.random.shuffle(ids) # but still random
-            startsat = int(np.ceil(ids.size*val_percentage))
-            train_files = np.concatenate([train_files, 
-                                          self.files[ids[startsat:]]])
-            train_labels = np.concatenate([train_labels, 
-                                           self.labels[ids[startsat:]]])
-            val_files = np.concatenate([val_files, self.files[ids[:startsat]]])
-            val_labels = np.concatenate([val_labels, self.labels[ids[:startsat]]])
-        
-        # Store files and labels inside dictionaries (tdata for train,
-        # vdata for val)
-        tdata = {filename: label for filename, label in 
-                                        zip(train_files, train_labels)}
-        vdata = {filename: label for filename, label in 
-                                        zip(val_files, val_labels)}
-
-        # Balance datasets (if required)
-        if balance:
-            tdata, vdata = self.balance_datasets(tdata, vdata)
-
-        return tdata, vdata
-
-
-    def split_using_groups(self, train_percentage=0.7, balance=False):
+    def _split_using_groups(self, train_percentage=0.7, balance=False):
         '''
         Split labeled data into train and test datasets considering data groups.
 
@@ -567,6 +499,81 @@ class DataHandler:
                 quantity += counts[i]
         
         # Store files and labels inside dictionaries (tdata for train, 
+        # vdata for val)
+        tdata = {filename: label for filename, label in 
+                                        zip(train_files, train_labels)}
+        vdata = {filename: label for filename, label in 
+                                        zip(val_files, val_labels)}
+
+        # Balance datasets (if required)
+        if balance:
+            tdata, vdata = self.balance_datasets(tdata, vdata)
+
+        return tdata, vdata
+    
+
+    # @TODO maybe add an optional val_percentage and define a test set
+    def split(self, train_percentage=0.7, balance=False, ignore_groups=False):
+        '''
+        Split labeled data into train and test datasets.
+
+        PARAMETERS
+        ----------
+        - train_percentage=0.7 (float): Percentage of data expected in train 
+        dataset.
+        - balance=False (bool): Do call "balance_datasets" method before 
+        returning dictionaries.
+        - ignore_groups=False (bool): If True, ignore groups for the split,
+        even though it is defined. If the "groups" attribute is not define,
+        then it is ignored anyway. If it is defined and "ignore_groups" is
+        False, then the split is done calling "_split_using_groups" method.
+
+        RETURNS
+        -------
+        - tdata (dict<str,str>): train dictionary with filename as key and label 
+        as value.
+        - vdata (dict<str,str>): val dictionary with filename as key and label 
+        as value.
+        
+        RAISES
+        ------
+        None
+        '''
+        if (self.files is None or self.labels is None 
+            or self.unique_labels is None):
+            print('|WRN| Load labeled data before calling "split". '
+                  '"files", "labels" and "unique_labels" attributes should '
+                  'not be None. Leaving.')
+            return None
+        
+        if train_percentage < 0 or train_percentage > 1:
+            print('|WRN| Should be: 0.00 <= "train_percentage" <= 1.00. Leaving.')
+            return None
+        
+        if not ignore_groups and self.groups is not None:
+            return self._split_using_groups(train_percentage, balance)
+
+        # Init arrays to store train/val files and labels
+        train_files = np.array([], dtype=self.str_ndarray_dtype)
+        train_labels = np.array([], dtype=self.str_ndarray_dtype)
+        val_files = np.array([], dtype=self.str_ndarray_dtype)
+        val_labels = np.array([], dtype=self.str_ndarray_dtype)
+        val_percentage = 1 - train_percentage
+
+        # Fill train/val files/labels lab per lab referring to train_percentage
+        for label in self.unique_labels:
+            ids = np.where(self.labels == label)[0]
+            np.random.seed(self.seed) # so the split is repeatable
+            np.random.shuffle(ids) # but still random
+            startsat = int(np.ceil(ids.size*val_percentage))
+            train_files = np.concatenate([train_files, 
+                                          self.files[ids[startsat:]]])
+            train_labels = np.concatenate([train_labels, 
+                                           self.labels[ids[startsat:]]])
+            val_files = np.concatenate([val_files, self.files[ids[:startsat]]])
+            val_labels = np.concatenate([val_labels, self.labels[ids[:startsat]]])
+        
+        # Store files and labels inside dictionaries (tdata for train,
         # vdata for val)
         tdata = {filename: label for filename, label in 
                                         zip(train_files, train_labels)}

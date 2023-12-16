@@ -234,31 +234,7 @@ RAISES
 None
 
 
-# split
-
-
-Split labeled data into train and test datasets.
-
-PARAMETERS
-----------
-- train_percentage=0.7 (float): Percentage of data expected in train
-dataset.
-- balance=False (bool): Do call "balance_datasets" method before
-returning dictionaries.
-
-RETURNS
--------
-- tdata (dict<str,str>): train dictionary with filename as key and label
-as value.
-- vdata (dict<str,str>): val dictionary with filename as key and label
-as value.
-
-RAISES
-------
-None
-
-
-# split_using_groups
+# _split_using_groups
 
 
 Split labeled data into train and test datasets considering data groups.
@@ -276,6 +252,34 @@ RETURNS
 as value.
 - vdata (dict<str,str>): Val dictionary with filename as key and label as
 value.
+
+RAISES
+------
+None
+
+
+# split
+
+
+Split labeled data into train and test datasets.
+
+PARAMETERS
+----------
+- train_percentage=0.7 (float): Percentage of data expected in train
+dataset.
+- balance=False (bool): Do call "balance_datasets" method before
+returning dictionaries.
+- ignore_groups=False (bool): If True, ignore groups for the split,
+even though it is defined. If the "groups" attribute is not define,
+then it is ignored anyway. If it is defined and "ignore_groups" is
+False, then the split is done calling "_split_using_groups" method.
+
+RETURNS
+-------
+- tdata (dict<str,str>): train dictionary with filename as key and label
+as value.
+- vdata (dict<str,str>): val dictionary with filename as key and label
+as value.
 
 RAISES
 ------
