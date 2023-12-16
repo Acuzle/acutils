@@ -133,6 +133,7 @@ Refer to the [documentation files](./doc) and code [examples](./examples) for de
 
 ## TBD
 
+- [ ] Provide more code examples.
 - [ ] Define a test pipeline to check if all features work.
 - [ ] Ensure that acutils works on multiple OS and Python versions.
 
