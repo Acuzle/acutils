@@ -141,7 +141,7 @@ Refer to the [documentation files](./doc) and code [examples](./examples) for de
 
 ## License
 
-Proprietary but will very very soon be switched to MIT or Apache 2.0.
+Apache-2.0, see the [LICENSE](./LICENSE).
 
 
 
