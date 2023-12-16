@@ -167,7 +167,9 @@ def get_preview(slide, lvl=-1, divider=None):
     ----------
     - slide (openslide.OpenSlide): The slide.
     - lvl=-1 (int): Level taken.
-    - divider=None (float): Scale the preview by dividing the slide.
+    - divider=None (float): Scale the preview by dividing the slide. The new 
+    width and height will be the old ones divided by the divider. It is also
+    the size of the area used to load the slide, to ensure no memory overload.
 
     RETURNS
     -------
@@ -183,22 +185,18 @@ def get_preview(slide, lvl=-1, divider=None):
         
     else:
         width, height = slide.level_dimensions[lvl]
-        new_width = int(width/divider)
-        new_height = int(height/divider)
-        amount = math.ceil(divider/4) # read area per area to avoid mem overload
-
-        w, h = int(width/amount), int(height/amount) # old scale
-        nw, nh = int(new_width/amount),  int(new_height/amount) # new scale
-        preview = aunp.zeros((new_height, new_width, 3), dtype=aunp.uint8) + 255
+        pw, ph = int(width/divider), int(height/divider) # size of the preview
+        tw, th = int(pw/divider),  int(ph/divider) # tile size from the preview
+        preview = aunp.zeros((pw, ph, 3), dtype=aunp.uint8) + 255
 
         # Update preview area per area
-        for i in range(amount):
-            for j in range(amount):
-                preview[j*nh:(j+1)*nh, i*nw:(i+1)*nw] = aunp.array(
+        for i in range(divider):
+            for j in range(divider):
+                preview[j*th:(j+1)*th, i*tw:(i+1)*tw] = aunp.array(
                     cv2.resize(
-                        np.array(slide.read_region((i*w,j*h), 0, (w, h)), 
+                        np.array(slide.read_region((i*pw,j*ph), 0, (pw, ph)), 
                             dtype=np.uint8)[:,:,:3], 
-                        dsize=(nw, nh), 
+                        dsize=(tw, th), 
                         interpolation=cv2.INTER_NEAREST
                     )
                 )

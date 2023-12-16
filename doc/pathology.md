@@ -77,7 +77,9 @@ PARAMETERS
 ----------
 - slide (openslide.OpenSlide): The slide.
 - lvl=-1 (int): Level taken.
-- divider=None (float): Scale the preview by dividing the slide.
+- divider=None (float): Scale the preview by dividing the slide. The new
+width and height will be the old ones divided by the divider. It is also
+the size of the area used to load the slide, to ensure no memory overload.
 
 RETURNS
 -------
