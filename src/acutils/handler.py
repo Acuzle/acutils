@@ -166,7 +166,8 @@ class DataHandler:
 
 
     def load_labels_fromsheet(self, sheetpath, idcol, labelcol, 
-            othercols=None, clueless_words=None, delete_unlabeled_files=True):
+            othercols=None, clueless_words=None, delete_unlabeled_files=True,
+            require_full_filename_match=False):
         '''
         Load data labels from a sheet file. 
         You must load files before calling this, you might call 
@@ -182,10 +183,16 @@ class DataHandler:
         here.
         - othercols=None (array/list like of str): Name of the other columns to 
         keep.
-        - clueless_words=None (array/list like of str): Strings considered as 
+        - clueless_words=None (array/list like
+          of str): Strings considered as 
         None.
         - delete_unlabeled_files=True (bool): If True, delete each file without 
         label.
+        - require_full_filename_match=False (bool): If True, requires the value
+        in the idcol to be exactly the filename, otherwise, if the value in the
+        idcol is included in the filename, it is considered as a match. Note 
+        that if the idcol value is included in multiple filenames, it will be
+        associated with the first one found (in descending length order).
     
         RETURNS
         -------
@@ -211,6 +218,8 @@ class DataHandler:
         for i, filename in enumerate(self.files):
             for filepart, label in zip(df[idcol].values, df[labelcol].values):
                 if filepart in filename:
+                    if require_full_filename_match and filepart != filename:
+                        continue
                     labels[i] = label
                     break
         
@@ -278,7 +287,7 @@ class DataHandler:
     
 
     def load_groups_fromsheet(self, sheetpath, idcol, groupcol, 
-                              clueless_words=None):
+            clueless_words=None, require_full_filename_match=False):
         '''
         Load data groups from a sheet file. 
         You must load files before calling this, you might call 
@@ -294,6 +303,11 @@ class DataHandler:
         here.
         - clueless_words=None (array/list like of str): Strings considered as 
         None.
+        - require_full_filename_match=False (bool): If True, requires the value
+        in the idcol to be exactly the filename, otherwise, if the value in the
+        idcol is included in the filename, it is considered as a match. Note 
+        that if the idcol value is included in multiple filenames, it will be
+        associated with the first one found (in descending length order).
     
         RETURNS
         -------
@@ -325,6 +339,8 @@ class DataHandler:
             groups[i] = filename # in case no group, filename becomes the group
             for filepart, group in zip(df[idcol].values, df[groupcol].values):
                 if filepart in filename:
+                    if require_full_filename_match and filepart != filename:
+                        continue
                     groups[i] = (group 
                                  if group not in clueless_words 
                                  else filename)

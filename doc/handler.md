@@ -110,10 +110,16 @@ the filename.
 here.
 - othercols=None (array/list like of str): Name of the other columns to
 keep.
-- clueless_words=None (array/list like of str): Strings considered as
+- clueless_words=None (array/list like
+of str): Strings considered as
 None.
 - delete_unlabeled_files=True (bool): If True, delete each file without
 label.
+- require_full_filename_match=False (bool): If True, requires the value
+in the idcol to be exactly the filename, otherwise, if the value in the
+idcol is included in the filename, it is considered as a match. Note
+that if the idcol value is included in multiple filenames, it will be
+associated with the first one found (in descending length order).
 
 RETURNS
 -------
@@ -161,6 +167,11 @@ the filename.
 here.
 - clueless_words=None (array/list like of str): Strings considered as
 None.
+- require_full_filename_match=False (bool): If True, requires the value
+in the idcol to be exactly the filename, otherwise, if the value in the
+idcol is included in the filename, it is considered as a match. Note
+that if the idcol value is included in multiple filenames, it will be
+associated with the first one found (in descending length order).
 
 RETURNS
 -------
