@@ -13,6 +13,9 @@ files.
 extensions.
 - allowed_cpus=1 (int): Maximum amount of CPUs used to compute.
 - seed=871 (int): Seed used to initialize numpy randomizer.
+- seed=str_ndarray_dtype="U256" (str): Data type used for any string
+numpy arrays. It defines the maximum length of strings, especially
+those in sheet files, for loading labels and groups.
 
 RETURNS
 -------

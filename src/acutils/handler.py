@@ -9,7 +9,8 @@ from . import sheet
 
 class DataHandler:
 
-    def __init__(self, datapath, file_extensions=None, allowed_cpus=1, seed=871):
+    def __init__(self, datapath, file_extensions=None, allowed_cpus=1, seed=871,
+                 str_ndarray_dtype="U256"):
         '''
         Initiate DataHandler instance to handle data on disk.
 
@@ -21,6 +22,9 @@ class DataHandler:
         extensions.
         - allowed_cpus=1 (int): Maximum amount of CPUs used to compute.
         - seed=871 (int): Seed used to initialize numpy randomizer.
+        - seed=str_ndarray_dtype="U256" (str): Data type used for any string
+        numpy arrays. It defines the maximum length of strings, especially 
+        those in sheet files, for loading labels and groups.
     
         RETURNS
         -------
@@ -39,9 +43,11 @@ class DataHandler:
         self.file_extensions = file_extensions
         self.allowed_cpus = allowed_cpus
         self.seed = seed
+        self.str_ndarray_dtype = str_ndarray_dtype
         self.files = None
         self.labels = None
         self.unique_labels = None
+        self.groups = None
 
 
     def _format_sheet(self, df, filecol=None, labelcol=None, othercols=None, 
@@ -162,7 +168,8 @@ class DataHandler:
                    or len(self.file_extensions) == 0) 
         self.files = np.array([filename for filename in os.listdir(self.datapath) 
                               if anyfile 
-                              or filename.endswith(tuple(self.file_extensions))])
+                              or filename.endswith(tuple(self.file_extensions))],
+                              dtype=self.str_ndarray_dtype)
 
 
     def load_labels_fromsheet(self, sheetpath, idcol, labelcol, 
@@ -214,7 +221,7 @@ class DataHandler:
         df = df.reindex(index=indices[::-1])
 
         # Get the label of each corresponding file
-        labels = np.empty(self.files.shape, dtype=f'U128')
+        labels = np.empty(self.files.shape, dtype=self.str_ndarray_dtype)
         for i, filename in enumerate(self.files):
             for filepart, label in zip(df[idcol].values, df[labelcol].values):
                 if filepart in filename:
@@ -233,7 +240,8 @@ class DataHandler:
                 self.labels = labels[ids]
             else:
                 self.labels = labels
-            self.unique_labels = np.unique(self.labels)
+            self.unique_labels = np.unique(self.labels
+                                           ).astype(self.str_ndarray_dtype)
 
 
     def load_labeled_data_fromdatapath(self):
@@ -256,9 +264,10 @@ class DataHandler:
         '''
         # Init arrays
         unique_labels = np.array([label for label in os.listdir(self.datapath) 
-                            if os.path.isdir(os.path.join(self.datapath, label))])
-        labels = np.array([], dtype='U')
-        files = np.array([], dtype='U')
+                            if os.path.isdir(os.path.join(self.datapath, label))],
+                            dtype=self.str_ndarray_dtype)
+        labels = np.array([], dtype=self.str_ndarray_dtype)
+        files = np.array([], dtype=self.str_ndarray_dtype)
 
         # Fill them label per label with founded files (if the ext is allowed)
         anyfile = (self.file_extensions is None # if no extension, keep any
@@ -275,7 +284,8 @@ class DataHandler:
                 continue
             files = np.concatenate([files, incoming_files])
             labels = np.concatenate([labels, 
-                            np.repeat(np.array([label]), incoming_files.size)])
+                            np.repeat(np.array([label]), incoming_files.size)]
+            ).astype(self.str_ndarray_dtype)
         
         # Update attributes only if not empty
         if files.size == 0 or labels.size == 0 or unique_labels.size == 0:
@@ -334,7 +344,7 @@ class DataHandler:
         df = df.reindex(index=indices[::-1])
 
         # Get the group of each corresponding file (if avalaible)
-        groups = np.empty(self.files.shape, dtype=f'U128')
+        groups = np.empty(self.files.shape, dtype=self.str_ndarray_dtype)
         for i, filename in enumerate(self.files):
             groups[i] = filename # in case no group, filename becomes the group
             for filepart, group in zip(df[idcol].values, df[groupcol].values):
@@ -450,10 +460,10 @@ class DataHandler:
             return None
 
         # Init arrays to store train/val files and labels
-        train_files = np.array([], dtype='U')
-        train_labels = np.array([], dtype='U')
-        val_files = np.array([], dtype='U')
-        val_labels = np.array([], dtype='U')
+        train_files = np.array([], dtype=self.str_ndarray_dtype)
+        train_labels = np.array([], dtype=self.str_ndarray_dtype)
+        val_files = np.array([], dtype=self.str_ndarray_dtype)
+        val_labels = np.array([], dtype=self.str_ndarray_dtype)
         val_percentage = 1 - train_percentage
 
         # Fill train/val files/labels lab per lab referring to train_percentage
