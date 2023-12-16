@@ -151,6 +151,7 @@ class DataHandler:
         '''
         Load data files from data directory.
         Assuming that those files are directly inside the data directory.
+        The filenames are stored as "files" attribute.
 
         PARAMETERS
         ----------
@@ -178,7 +179,8 @@ class DataHandler:
         '''
         Load data labels from a sheet file. 
         You must load files before calling this, you might call 
-        "load_data_fromdatapath".
+        "load_data_fromdatapath". The labels are stored as "labels" attribute 
+        and their unique values are stored as "unique_labels" attribute.
 
         PARAMETERS
         ----------
@@ -248,7 +250,9 @@ class DataHandler:
         '''
         Load data files and labels from data directory.
         Assuming that those files are inside subdirectories (named with unique 
-        labels).
+        labels). The filenames are stored as "files" attribute. The labels are 
+        stored as "labels" attribute and their unique values are stored as 
+        "unique_labels" attribute.
 
         PARAMETERS
         ----------
@@ -301,7 +305,7 @@ class DataHandler:
         '''
         Load data groups from a sheet file. 
         You must load files before calling this, you might call 
-        "load_data_fromdatapath".
+        "load_data_fromdatapath". The groups are stored as "groups" attribute.
 
         PARAMETERS
         ----------
