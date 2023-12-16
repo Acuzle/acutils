@@ -3,6 +3,7 @@
 #  - dstdir: absolute path to the directory that should contain new files (str)
 # Also, nothing should be returned.
 
+import json
 import os
 import re
 import shutil
@@ -195,3 +196,46 @@ def tmnt_generate_documentation(src, dstdir):
             f.write(f'# {function}\n\n\n')
             f.write(docstring.strip())
             f.write('\n\n\n')
+
+
+
+def save_dict_as_json(dst, data):
+    '''
+    Save a dictionary as a json file.
+
+    PARAMETERS
+    ----------
+    - dst (str): absolute path to the new json file.
+    - data (dict<str,str>): data dictionary to save.
+
+    RETURNS
+    -------
+    None
+
+    RAISES
+    ------
+    None
+    '''
+    with open(dst, "w") as json_file:
+        json.dump(data, json_file)
+
+
+
+def load_dict_from_json(src):
+    '''
+    Load a dictionary from a json file.
+
+    PARAMETERS
+    ----------
+    - src (str): absolute path to the json file.
+
+    RETURNS
+    -------
+    - data (dict<str,str>): loaded data dictionary.
+
+    RAISES
+    ------
+    None
+    '''
+    with open(src, "r") as json_file:
+        return json.load(json_file)

@@ -443,3 +443,40 @@ RAISES
 None
 
 
+# save_split
+
+
+Save a split (from "split" method) as a json file.
+
+PARAMETERS
+----------
+- dst (str): absolute path to the new json file.
+- data (dict<str,str>): data dictionary to save.
+
+RETURNS
+-------
+None
+
+RAISES
+------
+None
+
+
+# load_split
+
+
+Load a dictionary from a json file.
+
+PARAMETERS
+----------
+- src (str): absolute path to the json file.
+
+RETURNS
+-------
+- data (dict<str,str>): loaded data dictionary.
+
+RAISES
+------
+None
+
+

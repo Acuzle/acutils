@@ -33,7 +33,7 @@ handler.load_labels_fromsheet('./labels.xlsx', idcol="id", labelcol="label")
 
 # Even load relations between files through groups (optional for split)
 handler.load_groups_fromsheet(os.path.join(DIR, './labels.xlsx'), 
-                               idcol='id', groupcol='patient')
+                               idcol="id", groupcol="patient")
 
 # Randomly split into datasets (dict<filename,label>) and balance them
 tdata, vdata = handler.split(train_percentage=0.70) # use groups if defined

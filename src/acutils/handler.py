@@ -795,3 +795,42 @@ class DataHandler:
         packed_srcs, packed_dstdirs = self._distribute_datasets(trainpath, 
                                                     valpath, tdata, vdata)
         self._run_processes(packed_srcs, packed_dstdirs, func, **kwargs)
+
+
+    def save_split(self, dst, data):
+        '''
+        Save a split (from "split" method) as a json file.
+
+        PARAMETERS
+        ----------
+        - dst (str): absolute path to the new json file.
+        - data (dict<str,str>): data dictionary to save.
+
+        RETURNS
+        -------
+        None
+
+        RAISES
+        ------
+        None
+        '''
+        file.save_dict_as_json(dst, data)
+
+
+    def load_split(src):
+        '''
+        Load a dictionary from a json file.
+
+        PARAMETERS
+        ----------
+        - src (str): absolute path to the json file.
+
+        RETURNS
+        -------
+        - data (dict<str,str>): loaded data dictionary.
+
+        RAISES
+        ------
+        None
+        '''
+        return file.load_dict_from_json(src)

@@ -119,3 +119,40 @@ RAISES
 None
 
 
+# save_dict_as_json
+
+
+Save a dictionary as a json file.
+
+PARAMETERS
+----------
+- dst (str): absolute path to the new json file.
+- data (dict<str,str>): data dictionary to save.
+
+RETURNS
+-------
+None
+
+RAISES
+------
+None
+
+
+# load_dict_from_json
+
+
+Load a dictionary from a json file.
+
+PARAMETERS
+----------
+- src (str): absolute path to the json file.
+
+RETURNS
+-------
+- data (dict<str,str>): loaded data dictionary.
+
+RAISES
+------
+None
+
+
