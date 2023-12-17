@@ -11,22 +11,23 @@ def _process_func_on_multiple_files(srcs, dstdirs, func, **kwargs):
     **kwargs should be addionnal arguments to pass to the "func" function.
 
     PARAMETERS
-    ----------
-    - srcs (array/list like of str): Source file of each process.
-    - dstdirs (array/list like of str): Destination directory of each process.
-    - func (function): Treatment that will be applied on each source file it 
-    needs an absolute path to the source file "src" and absolute absolute path 
-    to destination files directory "dstdir" in acutils, any function prefixed 
-    with "tmnt" is usable.
-    - **kwargs: Arguments to pass to the "func" function.
+    ----------    
+	(array/list like of str) srcs:
+		Source file of each process.
+    
+	(array/list like of str) dstdirs:
+		Destination directory of each process.
+    
+	(function) func:
+		Treatment that will be applied on each source file it needs an absolute 
+    path to the source file "src" and absolute absolute path to destination files 
+    directory "dstdir" in acutils, any function prefixed with "tmnt" is usable.
+    
+	**kwargs: Arguments to pass to the "func" function.
     
     RETURNS
     -------
-    None
-    
-    RAISES
-    ------
-    None
+	None    
     '''
     for src, dstdir in zip(srcs, dstdirs):
         func(src, dstdir, **kwargs)
@@ -43,24 +44,27 @@ def run_processes_on_multiple_files(packed_srcs, packed_dstdirs, func,
     **kwargs should be addionnal arguments to pass to the "func" function.
 
     PARAMETERS
-    ----------
-    - packed_srcs (list<list<str>>): Source files absolute paths per process.
-    - packed_dstdirs (list<list<str>>): Destination directories absolute paths 
-    per process.
-    - func (function): Treatment that will be applied on each source file it 
-    needs an absolute path to the source file "src" and absolute absolute path 
-    to destination files directory "dstdir" in acutils, any function prefixed 
-    with "tmnt" is usable.
-    - allowed_cpus=1 (int): Maximum amount of CPUs used to compute.
-    - **kwargs: Arguments to pass to the "func" function.
+    ----------    
+	(list<list<str>>) packed_srcs:
+		Source files absolute paths per process.
+    
+	(list<list<str>>) packed_dstdirs:
+		Destination directories absolute paths per process.
+    
+	(function) func:
+		Treatment that will be applied on each source file it needs an absolute 
+            path to the source file "src" and absolute absolute path to destination 
+            files directory "dstdir" in acutils, any function prefixed with "tmnt" 
+            is usable.
+    
+	(int) allowed_cpus=1:
+		Maximum amount of CPUs used to compute.
+    
+	**kwargs: Arguments to pass to the "func" function.
     
     RETURNS
     -------
-    None
-    
-    RAISES
-    ------
-    None
+	None    
     '''
     Parallel(n_jobs=allowed_cpus)(delayed(_process_func_on_multiple_files)(
                 srcs = srcs,
@@ -77,21 +81,26 @@ def distribute(srcs, dstdirs, allowed_cpus=1, seed=871):
     The distribution is returned as 2 lists of lists of src or dstdir.
 
     PARAMETERS
-    ----------
-    - srcs (array/list like of str): Source files.
-    - dstdirs (array/list like of str): Destination directories.
-    - allowed_cpus=1 (int): Maximum amount of CPUs used to compute.
-    - seed=871 (int): Seed used to initialize numpy randomizer.
+    ----------    
+	(array/list like of str) srcs:
+		Source files.
+    
+	(array/list like of str) dstdirs:
+		Destination directories.
+    
+	(int) allowed_cpus=1:
+		Maximum amount of CPUs used to compute.
+    
+	(int) seed=871:
+		Seed used to initialize numpy randomizer.
 
     RETURNS
-    -------
-    - packed_srcs (list<list<str>>): Source files absolute paths per process.
-    - packed_dstdirs (list<list<str>>): Destination directories absolute paths 
-    per process.
+    -------    
+	(list<list<str>>) packed_srcs:
+		Source files absolute paths per process.
     
-    RAISES
-    ------
-    None
+	(list<list<str>>) packed_dstdirs:
+		Destination directories absolute paths per process.
     '''
     # Use numpy arrays to select with indices
     if type(srcs) is not np.array:

@@ -21,25 +21,35 @@ def browse_frames_for_binary_classification(src, bound, extra_down, extra_up,
     Skip from bound-extra_down to bound+extra_up.
 
     PARAMETERS
-    ------
-    - src (str): absolute path to the video
-    - bound (int): frame number that switch the status from "before" to "after"
-    - extra_down (int): how many frames to skip before the bound
-    - extra_up (int): how many frames to skip after the bound
-    - start=0 (int): frame number to start browsing frames
-    - end=None (int): frame number to end browsing frames (if None, go for the 
-    full duration)
+    ------    
+	(str) src:
+		absolute path to the video
+    
+	(int) bound:
+		frame number that switch the status from "before" to "after"
+    
+	(int) extra_down:
+		how many frames to skip before the bound
+    
+	(int) extra_up:
+		how many frames to skip after the bound
+    
+	(int) start=0:
+		frame number to start browsing frames
+    
+	(int) end=None:
+		frame number to end browsing frames (if None, go for the full duration)
     
     RETURNS
-    ------
-    - passed (generator of bool): True from entering inside the skipped range 
-    to the end
-    - count (generator of int): frame numbers
-    - frame (generator of numpy.array of uint8): BGR frames of the video
+    ------    
+	(generator of bool) passed:
+		True from entering inside the skipped range to the end
     
-    RAISES
-    ------
-    None
+	(generator of int) count:
+		frame numbers
+    
+	(generator of numpy.array of uint8) frame:
+		BGR frames of the video    
     '''
     srst = int(bound-extra_down) # skipped range start time
     srse = int(bound+extra_up) # skipped range end time
@@ -82,28 +92,39 @@ def tmnt_extract_frames_for_binary_classification(src, dstdir, bound,
     Split them into 2 states "before" or "after" the skipped range.
 
     PARAMETERS
-    ------
-    - src (str): absolute path to the video 
-    - dstdir (str): absolute path to the directory that should contain the 
-    frames
-    - bound (int): frame number that switch the status from "before" to "after"
-    - extra_down (int): how many frames to skip before the bound
-    - extra_up (int): how many frames to skip after the bound
-    - start=0 (int): frame number to start browsing frames
-    - end=None (int): frame number to end browsing frames (if None, go for the 
-    full duration)
-    - fext="png" (str): frame extension
-    - before_name="before" (str): name of the subdir inside dstdir to save 
-    frames before skip
-    - after_name="after" (str): name of the subdir inside dstdir to save frames 
-    after skip
+    ------    
+	(str) src:
+		absolute path to the video 
+    
+	(str) dstdir:
+		absolute path to the directory that should contain the frames
+    
+	(int) bound:
+		frame number that switch the status from "before" to "after"
+    
+	(int) extra_down:
+		how many frames to skip before the bound
+    
+	(int) extra_up:
+		how many frames to skip after the bound
+    
+	(int) start=0:
+		frame number to start browsing frames
+    
+	(int) end=None:
+		frame number to end browsing frames (if None, go for the full duration)
+    
+	(str) fext="png":
+		frame extension
+    
+	(str) before_name="before":
+		name of the subdir inside dstdir to save frames before skip
+    
+	(str) after_name="after":
+		name of the subdir inside dstdir to save frames after skip
     
     RETURNS
-    ------
-    None
-
-    RAISES
-    ------
+    -------
     None
     '''
     _, vext = os.path.splitext(src)
@@ -125,29 +146,45 @@ def tmnt_extract_sequences_for_binary_classification(src, dstdir, bound,
     Split them into 2 states "before" or "after" the skipped range.
 
     PARAMETERS
-    ----------
-    - src (str): absolute path to the video 
-    - dstdir (str): Absolute path to the directory that should contain the 
-    frames.
-    - bound (int): Frame number that switch the status from "before" to "after".
-    - extra_down (int): How many frames to skip before the bound.
-    - extra_up (int): How many frames to skip after the bound.
-    - seqlen=6 (int): Amount of frames per sequence.
-    - start=0 (int): Frame number to start browsing frames.
-    - end=None (int): Frame number to end browsing frames (if None, go for the 
-    full duration).
-    - sext="mp4" (str): Sequence extension.
-    - codec="mp4v" (str): Sequence codec, used for: fourcc = 
-    cv2.VideoWriter_fourcc(*codec).
-    - fps=12 (int): saved Sequence frames per second.
-    - before_name="before" (str): Name of the subdir inside dstdir to save 
-    frames before skip.
-    - after_name="after" (str): Name of the subdir inside dstdir to save frames 
-    after skip.
+    ----------    
+	(str) src:
+		absolute path to the video 
     
-    RAISES
-    ------
-    None
+	(str) dstdir:
+		Absolute path to the directory that should contain the frames.
+    
+	(int) bound:
+		Frame number that switch the status from "before" to "after".
+    
+	(int) extra_down:
+		How many frames to skip before the bound.
+    
+	(int) extra_up:
+		How many frames to skip after the bound.
+    
+	(int) seqlen=6:
+		Amount of frames per sequence.
+    
+	(int) start=0:
+		Frame number to start browsing frames.
+    
+	(int) end=None:
+		Frame number to end browsing frames (if None, go for the full duration).
+    
+	(str) sext="mp4":
+		Sequence extension.
+    
+	(str) codec="mp4v":
+		Sequence codec, used for: fourcc = cv2.VideoWriter_fourcc(*codec).
+    
+	(int) fps=12:
+		saved Sequence frames per second.
+    
+	(str) before_name="before":
+		Name of the subdir inside dstdir to save frames before skip.
+    
+	(str) after_name="after":
+		Name of the subdir inside dstdir to save frames after skip.    
     '''
 
     _, vext = os.path.splitext(src)

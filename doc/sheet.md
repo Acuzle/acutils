@@ -10,20 +10,22 @@ will be concerned.
 
 PARAMETERS
 ----------
-- df (pandas.DataFrame): The DataFrame to filter.
-- clueless_words=None (list<str>): Any cell containing a word of the list
-is treated as empty.
-- columns=None (list<str>): Columns considered for the deletion.
-- inplace=False (bool): If True, the DataFrame will be modified in place,
-else it is returned.
+(pandas.DataFrame) df:
+The DataFrame to filter.
+
+(list<str>) clueless_words=None:
+Any cell containing a word of the list is treated as empty.
+
+(list<str>) columns=None:
+Columns considered for the deletion.
+
+(bool) inplace=False:
+If True, the DataFrame will be modified in place, else it is returned.
 
 RETURNS
-- df=None (pandas.DataFrame): Filtered copy of passed df,
-if inplace==True returns None.
-
-RAISES
-------
-None
+-------
+(pandas.DataFrame) df=None:
+Filtered copy of passed df, if inplace==True returns None.
 
 
 # read_df_from_any_avalaible_extensions
@@ -35,15 +37,18 @@ hdf5, sas7bdat, stata, pickle.
 
 PARAMETERS
 ----------
-- sheetpath (str): Absolute path of the file to load.
+(str) sheetpath:
+Absolute path of the file to load.
 
 RETURNS
 -------
-- df (pandas.DataFrame): The DataFrame loaded from the file.
+(pandas.DataFrame) df:
+The DataFrame loaded from the file.
 
 RAISES
 ------
-ValueError: If the file extension is not supported.
+(ValueError) err:
+If the file extension is not supported.
 
 
 # add_suffix_to_cells_from_a_column
@@ -53,20 +58,21 @@ Concatenate a string with the values in certain columns of a Pandas DataFrame.
 
 PARAMETERS
 ----------
-- df (pandas.DataFrame): The DataFrame to modify.
-- suffix (str): The string to concatenate with the values in the specified
-columns.
-- columns (list): A list of column names to concatenate with the string.
-- inplace=False (bool): If True, the DataFrame will be modified in place,
-else it is returned.
+(pandas.DataFrame) df:
+The DataFrame to modify.
+
+(str) suffix:
+The string to concatenate with the values in the specified columns.
+
+(list) columns:
+A list of column names to concatenate with the string.
+
+(bool) inplace=False:
+If True, the DataFrame will be modified in place, else it is returned.
 
 RETURNS
 -------
-- df=None (pandas.DataFrame): Modified copy of passed df, if inplace==True
-returns None.
-
-RAISES
-------
-None
+(pandas.DataFrame) df=None:
+Modified copy of passed df, if inplace==True returns None.
 
 

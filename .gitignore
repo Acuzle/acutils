@@ -131,3 +131,18 @@ dmypy.json
 # Dev files
 temp.ipynb
 temp.py
+
+# Sphinx documentation
+_build/
+_static/
+_templates/
+acutils.rst
+file.rst
+gpu.rst
+handler.rst
+image.rst
+modules.rst
+multiprocess.rst
+pathology.rst
+sheet.rst
+video.rst

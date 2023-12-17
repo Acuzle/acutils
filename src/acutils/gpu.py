@@ -7,17 +7,15 @@ def cupy_to_numpy(arr):
     Return a numpy.array from a cupy.array or a numpy.array.
 
     PARAMETERS
-    ----------
-    - arr (numpy.array or cupy.array): array to convert as numpy one 
+    ----------    
+	(numpy.array or cupy.array) arr:
+		array to convert as numpy one 
     (if not already).
 
     RETURNS
-    -------
-    - convarr (numpy.array): converted array.
-
-    RAISES
-    ------
-    None
+    -------    
+	(numpy.array) convarr:
+		converted array.
     '''
     try:
         return arr.get() # if using GPU (cupy)
@@ -32,16 +30,13 @@ def set_gpu_computation(activate=True):
     are needed, it changes import as auski and aunp.
 
     PARAMETERS
-    ----------
-    - activate=False (bool): activate or not GPU computation.
+    ----------    
+	(bool) activate=False:
+		activate or not GPU computation.
 
     RETURNS
     -------
-    None
-
-    RAISES
-    ------
-    None
+	None
     '''
     global auski, aunp # strange names to avoid conflicts
     if activate == True:
@@ -77,16 +72,13 @@ def select_device(device):
     Select device used for some GPU computations of the current process.
 
     PARAMETERS
-    ----------
-    - device (int or None): selected GPU (if None, does nothing).
+    ----------    
+	(int or None) device:
+		selected GPU (if None, does nothing).
 
     RETURNS
     -------
-    None
-
-    RAISES
-    ------
-    None
+	None
     '''
     if device is not None:
         try:

@@ -8,6 +8,40 @@ from . import sheet
 
 
 class DataHandler:
+    '''
+    Main class to handle data on disk.
+
+    ATTRIBUTES
+    ----------
+    (str) datapath:
+        Absolute path to the directory that contain source files.
+    
+    (array/list like of str) file_extensions=None:
+        Source file allowed extensions.
+    
+    (int) allowed_cpus=1:
+        Maximum amount of CPUs used to compute.
+    
+    (int) seed=871:
+        Seed used to initialize numpy randomizer.
+    
+    (str) str_ndarray_dtype="U256":
+        Data type used for any string numpy arrays. It defines the maximum 
+            length of strings, especially those in sheet files, for loading 
+            labels and groups.
+    
+    (numpy.array<str_ndarray_dtype>) files=None:
+        The filenames (with extension) of the files to load.
+    
+    (numpy.array<str_ndarray_dtype>) labels=None:
+        The labels of the files.
+    
+    (numpy.array<str_ndarray_dtype>) unique_labels=None:
+        The unique labels among the labels.
+    
+    (numpy.array<str_ndarray_dtype>) groups=None:
+        The groups of the files, all with the same will be in the same dataset split.
+    '''
 
     def __init__(self, datapath, file_extensions=None, allowed_cpus=1, seed=871,
                  str_ndarray_dtype="U256"):
@@ -15,25 +49,32 @@ class DataHandler:
         Initiate DataHandler instance to handle data on disk.
 
         PARAMETERS
-        ----------
-        - datapath (str): Absolute path to the directory that contain source 
-        files.
-        - file_extensions=None (array/list like of str): Source file allowed 
-        extensions.
-        - allowed_cpus=1 (int): Maximum amount of CPUs used to compute.
-        - seed=871 (int): Seed used to initialize numpy randomizer.
-        - seed=str_ndarray_dtype="U256" (str): Data type used for any string
-        numpy arrays. It defines the maximum length of strings, especially 
-        those in sheet files, for loading labels and groups.
+        ----------        
+		(str) datapath:
+		    Absolute path to the directory that contain source files.
+        
+		(array/list like of str) file_extensions=None:
+		    Source file allowed extensions.
+        
+		(int) allowed_cpus=1:
+		    Maximum amount of CPUs used to compute.
+        
+		(int) seed=871:
+		    Seed used to initialize numpy randomizer.
+        
+		(str) str_ndarray_dtype="U256":
+		    Data type used for any string numpy arrays. It defines the maximum 
+                length of strings, especially those in sheet files, for loading 
+                labels and groups.
     
         RETURNS
         -------
-        None
+		None
         
         RAISES
         ------
-        - NotADirectoryError: if the absolute path doesn't lead to an existing 
-        directory.
+        (NotADirectoryError) err: 
+            if the absolute path doesn't lead to an existing directory.
         '''
         if not os.path.isdir(datapath):
             raise NotADirectoryError("datapath must be an absolute path to an "
@@ -58,19 +99,26 @@ class DataHandler:
         only one extension.
 
         PARAMETERS
-        ----------
-        - df (pandas.DataFrame): dataframe to format
-        - filecol=None (str): Name of the column that contains filenames, not 
-        used there.
-        - labelcol=None (str): Name of the column that contains labels, not 
-        used there.
-        - othercols=None (list<str>): Name of the other columns, not used there.
-        - clueless_words=None (array/list like of str): Strings considered as 
-        None.
+        ----------        
+		(pandas.DataFrame) df:
+		    dataframe to format
+        
+		(str) filecol=None:
+		    Name of the column that contains filenames, not used there.
+        
+		(str) labelcol=None:
+		    Name of the column that contains labels, not used there.
+        
+		(list<str>) othercols=None:
+		    Name of the other columns, not used there.
+        
+		(array/list like of str) clueless_words=None:
+		    Strings considered as None.
 
         RETURNS
-        -------
-        - df (pandas.DataFrame): formated dataframe.
+        -------        
+		(pandas.DataFrame) df:
+		    formated dataframe.
     
         RAISES
         ------
@@ -84,67 +132,34 @@ class DataHandler:
         Load a sheet file and keep indicated columns.
 
         PARAMETERS
-        ----------
-        - sheetpath (str): Absolute path to the sheet which contain information 
-        about data.
-        - filecol=None (str): Name of the column that contains filenames.
-        - labelcol=None (str): Name of the column that contains labels, not used 
-        here.
-        - othercols=None (iterable of str): Name of the other columns to keep.
+        ----------        
+		(str) sheetpath:
+		    Absolute path to the sheet which contain information about data.
+        
+		(str) filecol=None:
+		    Name of the column that contains filenames.
+        
+		(str) labelcol=None:
+		    Name of the column that contains labels, not used here.
+        
+		(iterable of str) othercols=None:
+		    Name of the other columns to keep.
 
         RETURNS
-        -------
-        - df (pandas.DataFrame): Loaded dataframe.
+        -------        
+		(pandas.DataFrame) df:
+		    Loaded dataframe.
 
         RAISES
         ------
-        - ValueError: If the file extension is not supported.
+        (ValueError) err:
+            If the file extension is not supported.
         '''
         if othercols is None:
             othercols = []
         cols = [col for col in othercols]
         cols.append(filecol) ; cols.append(labelcol)
         return sheet.read_df_from_any_avalaible_extensions(sheetpath)[cols]
-
-
-    # def load_labeled_data_fromsheet(self, sheetpath, filecol, labelcol, 
-    #                                 othercols=None, clueless_words=None):
-    #     '''
-    #     Load data files and labels from a sheet file.
-
-    #     PARAMETERS
-    #     ----------
-    #     - sheetpath (str): absolute path to the sheet which contain information 
-    #     about data.
-    #     - filecol=None (str): name of the column that contains filenames.
-    #     - labelcol=None (str): name of the column that contains labels, not used 
-    #     here.
-    #     - othercols=None (array/list like of str): name of the other columns to 
-    #     keep.
-    #     - clueless_words=None (array/list like of str): strings considered as 
-    #     None.
-
-    #     RETURNS
-    #     -------
-    #     None
-
-    #     RAISES
-    #     ------
-    #     None
-    #     '''
-    #     # Load and format sheet
-    #     df = self._load_sheet(sheetpath, filecol, labelcol, othercols)
-    #     df[filecol] = df[filecol].astype(str)
-    #     df[labelcol] = df[labelcol].astype(str)
-    #     df = self._format_sheet(df, filecol, labelcol, othercols, clueless_words)
-
-    #     # Update files and labels
-    #     if df.size == 0:
-    #         print('|WRN| no file or label keeped, nothing changed. Leaving.')
-    #     else:
-    #         self.files = df[filecol].values
-    #         self.labels = df[labelcol].values
-    #         self.unique_labels = np.unique(self.labels)
 
 
     def load_data_fromdatapath(self):
@@ -155,15 +170,11 @@ class DataHandler:
 
         PARAMETERS
         ----------
-        None
+		None
     
         RETURNS
         -------
-        None
-        
-        RAISES
-        ------
-        None
+		None
         '''
         anyfile = (self.file_extensions is None # if no extension, keep any
                    or len(self.file_extensions) == 0) 
@@ -183,33 +194,35 @@ class DataHandler:
         and their unique values are stored as "unique_labels" attribute.
 
         PARAMETERS
-        ----------
-        - sheetpath (str): Absolute path to the sheet which contain information 
-        about data.
-        - idcol=None (str): Name of the column that contains at least a part of 
-        the filename.
-        - labelcol=None (str): Name of the column that contains labels, not used 
-        here.
-        - othercols=None (array/list like of str): Name of the other columns to 
-        keep.
-        - clueless_words=None (array/list like
-          of str): Strings considered as 
-        None.
-        - delete_unlabeled_files=True (bool): If True, delete each file without 
-        label.
-        - require_full_filename_match=False (bool): If True, requires the value
-        in the idcol to be exactly the filename, otherwise, if the value in the
-        idcol is included in the filename, it is considered as a match. Note 
-        that if the idcol value is included in multiple filenames, it will be
-        associated with the first one found (in descending length order).
+        ----------        
+		(str) sheetpath:
+		    Absolute path to the sheet which contain information about data.
+        
+		(str) idcol=None:
+		    Name of the column that contains at least a part of the filename.
+        
+		(str) labelcol=None:
+		    Name of the column that contains labels, not used here.
+        
+		(array/list like of str) othercols=None:
+		    Name of the other columns to keep.
+        
+		(array/list like of str) clueless_words=None:
+		    Strings considered as None.
+        
+		(bool) delete_unlabeled_files=True:
+		    If True, delete each file without label.
+        
+		(bool) require_full_filename_match=False:
+		    If True, requires the value in the idcol to be exactly the filename,
+            otherwise, if the value in the idcol is included in the filename, 
+            it is considered as a match. Note that if the idcol value is 
+            included in multiple filenames, it will be associated with the 
+            first one found, in descending length order.
     
         RETURNS
         -------
-        None
-        
-        RAISES
-        ------
-        None
+		None
         '''
         # Load and format sheet
         df = self._load_sheet(sheetpath, idcol, labelcol, othercols)
@@ -256,15 +269,11 @@ class DataHandler:
 
         PARAMETERS
         ----------
-        None
+		None
     
         RETURNS
         -------
-        None
-        
-        RAISES
-        ------
-        None
+		None
         '''
         # Init arrays
         unique_labels = np.array([label for label in os.listdir(self.datapath) 
@@ -308,28 +317,29 @@ class DataHandler:
         "load_data_fromdatapath". The groups are stored as "groups" attribute.
 
         PARAMETERS
-        ----------
-        - sheetpath (str): Absolute path to the sheet which contain information 
-        about data.
-        - idcol=None (str): Name of the column that contains at least a part of 
-        the filename.
-        - groupcol=None (str): Name of the column that contains groups, not used 
-        here.
-        - clueless_words=None (array/list like of str): Strings considered as 
-        None.
-        - require_full_filename_match=False (bool): If True, requires the value
-        in the idcol to be exactly the filename, otherwise, if the value in the
-        idcol is included in the filename, it is considered as a match. Note 
-        that if the idcol value is included in multiple filenames, it will be
-        associated with the first one found (in descending length order).
+        ----------        
+		(str) sheetpath:
+		    Absolute path to the sheet which contain information about data.
+        
+		(str) idcol=None:
+		    Name of the column that contains at least a part of the filename.
+        
+		(str) groupcol=None:
+		    Name of the column that contains groups, not used here.
+        
+		(array/list like of str) clueless_words=None:
+		    Strings considered as None.
+        
+		(bool) require_full_filename_match=False:
+		    If True, requires the value in the idcol to be exactly the filename,
+            otherwise, if the value in the idcol is included in the filename, 
+            it is considered as a match. Note that if the idcol value is 
+            included in multiple filenames, it will be associated with the 
+            first one found, in descending length order.
     
         RETURNS
         -------
-        None
-        
-        RAISES
-        ------
-        None
+		None
         '''
         # Load and format sheet
         df = sheet.read_df_from_any_avalaible_extensions(sheetpath)
@@ -367,18 +377,14 @@ class DataHandler:
         Balance dataset so the amount of data is equal for each label.
 
         PARAMETERS
-        ----------
-        - data (dict<str,str>): Dictionary with filename as key and label as 
-        value.
+        ----------        
+		(dict<str;str>) data:
+		    Dictionary with filename as key and label as value.
 
         RETURNS
-        -------
-        - balanced_data (dict<str,str>): Data without superfluous files to 
-        balance it.
-        
-        RAISES
-        ------
-        None
+        -------        
+		(dict<str;str>) balanced_data:
+		    Data without superfluous files to balance it.
         '''
         balanced_data = data.copy()
 
@@ -409,22 +415,20 @@ class DataHandler:
         This is basically calling "_balance_dataset" method with tdata then vdata.
 
         PARAMETERS
-        ----------
-        - tdata (dict<str,str>): Train dictionary with filename as key and label 
-        as value.
-        - vdata (dict<str,str>): Val dictionary with filename as key and label 
-        as value.
+        ----------        
+		(dict<str;str>) tdata:
+		    Train dictionary with filename as key and label as value.
+        
+		(dict<str;str>) vdata:
+		    Val dictionary with filename as key and label as value.
 
         RETURNS
-        -------
-        - balanced_tdata (dict<str,str>): Train data without superfluous files 
-        to balance it.
-        - balanced_vdata (dict<str,str>): Val data without superfluous files to 
-        balance it.
-    
-        RAISES
-        ------
-        None
+        -------        
+		(dict<str;str>) balanced_tdata:
+		    Train data without superfluous files to balance it.
+        
+		(dict<str;str>) balanced_vdata:
+		    Val data without superfluous files to balance it.
         '''
         return self._balance_dataset(tdata), self._balance_dataset(vdata)
 
@@ -434,22 +438,20 @@ class DataHandler:
         Split labeled data into train and test datasets considering data groups.
 
         PARAMETERS
-        ----------
-        - train_percentage=0.7 (float): Percentage of data expected in train 
-        dataset.
-        - balance=False (bool): Do call "balance_datasets" method before 
-        returning dictionaries.
+        ----------        
+		(float) train_percentage=0.7:
+		    Percentage of data expected in train dataset.
+        
+		(bool) balance=False:
+		    Do call "balance_datasets" method before returning dictionaries.
 
         RETURNS
-        -------
-        - tdata (dict<str,str>): Train dictionary with filename as key and label 
-        as value.
-        - vdata (dict<str,str>): Val dictionary with filename as key and label as 
-        value.
+        -------        
+		(dict<str;str>) tdata:
+		    Train dictionary with filename as key and label as value.
         
-        RAISES
-        ------
-        None
+		(dict<str;str>) vdata:
+		    Val dictionary with filename as key and label as value.
         '''
         if (self.files is None or self.labels is None 
             or self.unique_labels is None):
@@ -518,26 +520,26 @@ class DataHandler:
         Split labeled data into train and test datasets.
 
         PARAMETERS
-        ----------
-        - train_percentage=0.7 (float): Percentage of data expected in train 
-        dataset.
-        - balance=False (bool): Do call "balance_datasets" method before 
-        returning dictionaries.
-        - ignore_groups=False (bool): If True, ignore groups for the split,
-        even though it is defined. If the "groups" attribute is not define,
-        then it is ignored anyway. If it is defined and "ignore_groups" is
-        False, then the split is done calling "_split_using_groups" method.
+        ----------        
+		(float) train_percentage=0.7:
+		    Percentage of data expected in train dataset.
+        
+		(bool) balance=False:
+		    Do call "balance_datasets" method before returning dictionaries.
+        
+		(bool) ignore_groups=False:
+            If True, ignore groups for the split, even though it is defined. 
+            If the "groups" attribute is not define, then it is ignored anyway. 
+            If it is defined and "ignore_groups" is False, then the split is done 
+            calling "_split_using_groups" method.
 
         RETURNS
-        -------
-        - tdata (dict<str,str>): train dictionary with filename as key and label 
-        as value.
-        - vdata (dict<str,str>): val dictionary with filename as key and label 
-        as value.
+        -------        
+		(dict<str;str>) tdata:
+		    train dictionary with filename as key and label as value.
         
-        RAISES
-        ------
-        None
+		(dict<str;str>) vdata:
+		    val dictionary with filename as key and label as value.
         '''
         if (self.files is None or self.labels is None 
             or self.unique_labels is None):
@@ -593,19 +595,17 @@ class DataHandler:
         The distribution is returned as 2 lists of lists of src or dstdir.
 
         PARAMETERS
-        ----------
-        - dirpath (str): Absolute path to the directory for treated files.
+        ----------        
+		(str) dirpath:
+		    Absolute path to the directory for treated files.
 
         RETURNS
-        -------
-        - packed_srcs (list<list<str>>): Source files absolute paths per 
-        process.
-        - packed_dstdirs (list<list<str>>): Destination directories absolute 
-        paths per process.
+        -------        
+		(list<list<str>>) packed_srcs:
+		    Source files absolute paths per process.
         
-        RAISES
-        ------
-        None
+		(list<list<str>>) packed_dstdirs:
+		    Destination directories absolute paths per process.
         '''
         # Update destination directory with labels (if defined)
         if self.labels is not None:
@@ -630,25 +630,26 @@ class DataHandler:
         The distribution is returned into collections.
 
         PARAMETERS
-        ----------
-        - tdstdir (str): Absolute path to the destination files directory for 
-        train dataset.
-        - vdstdir (str): Absolute path to the destination files directory for 
-        val dataset.
-        - tdata (dict<str,str>): Train dictionary with filename as key and label 
-        as value.
-        - vdata (dict<str,str>): Val dictionary with filename as key and label 
-        as value.
+        ----------        
+		(str) tdstdir:
+		    Absolute path to the destination files directory for train dataset.
+        
+		(str) vdstdir:
+		    Absolute path to the destination files directory for val dataset.
+        
+		(dict<str;str>) tdata:
+		    Train dictionary with filename as key and label as value.
+        
+		(dict<str;str>) vdata:
+		    Val dictionary with filename as key and label as value.
 
         RETURNS
-        -------
-        - packed_srcs (list<list<str>>): Src files absolute paths per process.
-        - packed_dstdirs (list<list<str>>): Destination directories absolute 
-        paths per process.
-    
-        RAISES
-        ------
-        None
+        -------        
+		(list<list<str>>) packed_srcs:
+		    Src files absolute paths per process.
+        
+		(list<list<str>>) packed_dstdirs:
+		    Destination directories absolute paths per process.
         '''
         # Define srcs and dstdirs
         srcs, dstdirs = [], []
@@ -674,24 +675,25 @@ class DataHandler:
         **kwargs should be addionnal arguments to pass to the "func" function.
 
         PARAMETERS
-        ----------
-        - packed_srcs (array/list like of iterables of str): src files absolute 
-        paths per process.
-        - packed_dstdirs (array/list like of iterables of str): dst dirs 
-        absolute paths per process.
-        - func (function): Treatment that will be applied on each source file
-        it needs an absolute path to the source file "src" and absolute 
-        absolute path to destination files directory "dstdir" in acutils, 
-        any function prefixed with "tmnt" is usable.
-        - **kwargs: Arguments to pass to the "func" function.
+        ----------        
+		(array/list like of iterables of str) packed_srcs:
+		    src files absolute paths per process.
+        
+		(array/list like of iterables of str) packed_dstdirs:
+		    dst dirs absolute paths per process.
+        
+		(function) func:
+            Treatment that will be applied on each source file
+                it needs an absolute path to the source file "src" and absolute 
+                path to destination files directory "dstdir". In acutils, 
+                any function prefixed with "tmnt" is usable.
+
+        **kwargs:
+            Arguments to pass to the "func" function.
     
         RETURNS
         -------
-        None
-        
-        RAISES
-        ------
-        None
+		None
         '''
         multiprocess.run_processes_on_multiple_files(packed_srcs, 
                   packed_dstdirs, func, self.allowed_cpus, **kwargs)
@@ -703,16 +705,13 @@ class DataHandler:
         empty subdirecories, named from unique labels (if defined and not empty).
 
         PARAMETERS
-        ----------
-        - dirpath (str): Absolute path to the directory to reset.
+        ----------        
+		(str) dirpath:
+		    Absolute path to the directory to reset.
     
         RETURNS
         -------
-        None
-        
-        RAISES
-        ------
-        None
+		None
         '''
         file.reset_directory(dirpath, subs=self.unique_labels)
 
@@ -726,23 +725,26 @@ class DataHandler:
         **kwargs should be addionnal arguments to pass to the "func" function.
 
         PARAMETERS
-        ----------
-        - dirpath (str): Absolute path to treated files directory.
-        - func=None (function): Treatment that will be applied on each source 
-        file it needs an absolute path to the source file "src" and absolute 
-        absolute path to destination files directory "dstdir" in acutils,any 
-        function prefixed with "tmnt" is usable.
-        - empty_dir=True (bool): If True, reset destination directory and fill it with unique labels
-                          as subdirectories if defined
-        - **kwargs: Arguments to pass to the "func" function.
+        ----------        
+		(str) dirpath:
+		    Absolute path to treated files directory.
+        
+		(function) func=None:
+            Treatment that will be applied on each source file it needs an 
+            absolute path to the source file "src" and absolute path to 
+            destination files directory "dstdir". In acutils, any 
+            function prefixed with "tmnt" is usable.
+                
+		(bool) empty_dir=True:
+		    If True, reset destination directory and fill it with unique labels
+                as subdirectories if defined
+
+        **kwargs:
+            Arguments to pass to the "func" function.
     
         RETURNS
         -------
-        None
-        
-        RAISES
-        ------
-        None
+		None
         '''
         # Without treatment to apply, copy source files
         if func is None:
@@ -766,28 +768,35 @@ class DataHandler:
         **kwargs should be addionnal arguments to pass to the "func" function.
 
         PARAMETERS
-        ----------
-        - trainpath (str): Absolute path to the destination files train directory.
-        - valpath (str): Absolute path to the destination files val directory.
-        - tdata (dict<str,str>): Train dictionary with filename as key and label 
-        as value.
-        - vdata (dict<str,str>): Val dictionary with filename as key and label 
-        as value.
-        - func=None (function): Treatment that will be applied on each source 
-        file it needs an absolute path to the source file "src" and absolute 
-        absolute path to destination files directory "dstdir" in acutils,any 
-        function prefixed with "tmnt" is usable.
-        - empty_dir=True (bool): If True, reset destination directories and fill 
-        it with unique labels as subdirectories if defined.
-        - **kwargs: Arguments to pass to the "func" function.
+        ----------        
+		(str) trainpath:
+		    Absolute path to the destination files train directory.
+        
+		(str) valpath:
+		    Absolute path to the destination files val directory.
+        
+		(dict<str;str>) tdata:
+		    Train dictionary with filename as key and label as value.
+        
+		(dict<str;str>) vdata:
+		    Val dictionary with filename as key and label as value.
+        
+		(function) func=None:
+            Treatment that will be applied on each source file it needs an 
+            absolute path to the source file "src" and absolute path to 
+            destination files directory "dstdir". In acutils, any 
+            function prefixed with "tmnt" is usable.
+        
+		(bool) empty_dir=True:
+		    If True, reset destination directories and fill it with unique labels 
+            as subdirectories if defined.
+
+        **kwargs: 
+            Arguments to pass to the "func" function.
     
         RETURNS
         -------
-        None
-        
-        RAISES
-        ------
-        None
+		None
         '''
         # Without treatment to apply, copy source files
         if func is None:
@@ -809,17 +818,16 @@ class DataHandler:
         Save a split (from "split" method) as a json file.
 
         PARAMETERS
-        ----------
-        - dst (str): absolute path to the new json file.
-        - data (dict<str,str>): data dictionary to save.
+        ----------        
+		(str) dst:
+		    absolute path to the new json file.
+        
+		(dict<str;str>) data:
+		    data dictionary to save.
 
         RETURNS
         -------
-        None
-
-        RAISES
-        ------
-        None
+		None
         '''
         file.save_dict_as_json(dst, data)
 
@@ -829,15 +837,13 @@ class DataHandler:
         Load a dictionary from a json file.
 
         PARAMETERS
-        ----------
-        - src (str): absolute path to the json file.
+        ----------        
+		(str) src:
+		    absolute path to the json file.
 
         RETURNS
-        -------
-        - data (dict<str,str>): loaded data dictionary.
-
-        RAISES
-        ------
-        None
+        -------        
+		(dict<str;str>) data:
+		    loaded data dictionary.
         '''
         return file.load_dict_from_json(src)

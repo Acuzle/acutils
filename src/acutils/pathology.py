@@ -53,17 +53,13 @@ def update_ref_image(img_path=None):
     the image on the GPU (using cupy instead of numpy).
     
     PARAMETERS
-    ----------
-    - img_path=None (str): Absolute path to the image that will be 
-    - the reference to harmonize.
+    ----------    
+	(str) img_path=None:
+		Absolute path to the image that will be the reference to harmonize.
     
     RETURNS
     -------
-    None
-    
-    RAISES
-    ------
-    None
+	None    
     '''
     global IHC_REF_IMAGE, IHC_H_REF, IHC_E_REF, IHC_D_REF
     if img_path is None:
@@ -94,23 +90,22 @@ def harmonize(img):
     You can change the reference image calling update_ref_image function.
     
     PARAMETERS
-    ----------
-    - img (numpy.array or cupy.array of int): RGB image to harmonize.
+    ----------    
+	(numpy.array or cupy.array of int) img:
+		RGB image to harmonize.
     
     RETURNS
     -------
-    None
+	None
     
-    RAISES
-    ------
-    None
 
     REFERENCES
     ----------
-    - [1] A. C. Ruifrok and D. A. Johnston, "Quantification of histochemical
-      staining by color deconvolution.," Analytical and quantitative
-      cytology and histology / the International Academy of Cytology [and]
-      American Society of Cytology, vol. 23, no. 4, pp. 291-9, Aug. 2001.
+        [1] A. C. Ruifrok and D. A. Johnston:
+            "Quantification of histochemical staining by color deconvolution.," 
+            Analytical and quantitative cytology and histology / the International 
+            Academy of Cytology [and] American Society of Cytology, vol. 23, no. 4, 
+            pp. 291-9, Aug. 2001.
     '''
     ihc_hed = (auski.color.rgb2hed(img))
     null = aunp.zeros_like(ihc_hed[:, :, 0])
@@ -140,18 +135,16 @@ def tmnt_harmonize(src, dstdir):
     Read a segment, harmonize it calling harmonize function, then save it.
     
     PARAMETERS
-    ----------
-    - src (str): Absolute path to the file that will be processed.
-    - dstdir (str): Absolute path to the directory that should contain the 
-    new file.
+    ----------    
+	(str) src:
+		Absolute path to the file that will be processed.
+    
+	(str) dstdir:
+		Absolute path to the directory that should contain the new file.
     
     RETURNS
     -------
-    None
-    
-    RAISES
-    ------
-    None
+	None    
     '''
     img = harmonize(aunp.array(imread(src)))
     imsave(os.path.join(dstdir, os.path.basename(src)), 
@@ -164,20 +157,22 @@ def get_preview(slide, lvl=-1, divider=None):
     Read the slide and returns it with low resolution.
     
     PARAMETERS
-    ----------
-    - slide (openslide.OpenSlide): The slide.
-    - lvl=-1 (int): Level taken.
-    - divider=None (float): Scale the preview by dividing the slide. The new 
-    width and height will be the old ones divided by the divider. It is also
-    the size of the area used to load the slide, to ensure no memory overload.
+    ----------    
+	(openslide.OpenSlide) slide:
+		The slide.
+    
+	(int) lvl=-1:
+		Level taken.
+    
+	(float) divider=None:
+		Scale the preview by dividing the slide. The new width and height will be 
+            the old ones divided by the divider. It is also the size of the area 
+            used to load the slide, to ensure no memory overload.
 
     RETURNS
-    -------
-    - preview (numpy.array or cupy.array of int): Scaled loaded slide.
-    
-    RAISES
-    ------
-    None
+    -------    
+	(numpy.array or cupy.array of int) preview:
+		Scaled loaded slide.    
     '''
     if divider is None:
         preview = aunp.array(np.asarray(slide.get_thumbnail(
@@ -209,18 +204,20 @@ def get_cleaned_binary(preview, fp_val=16, sigma=2):
     Split foreground (1) and background (0) using mathematic morphology.
     
     PARAMETERS
-    ----------
-    - preview (numpy.array of cupy.array of int): Fully loaded slide with low resolution.
-    - fpval=16 (int): Value that is used to creates footprints for segmentation.
-    - sigma=2 (float): Value for gaussian filter (applied on the slide before segmentation).
+    ----------    
+	(numpy.array of cupy.array of int) preview:
+		Fully loaded slide with low resolution.
+    
+	(int) fpval=16:
+		Value that is used to creates footprints for segmentation.
+    
+	(float) sigma=2:
+		Value for gaussian filter (applied on the slide before segmentation).
     
     RETURNS
-    -------
-    - bw (numpy.array of cupy.array of bool): Binary image from the preview.
-    
-    RAISES
-    ------
-    None
+    -------    
+	(numpy.array of cupy.array of bool) bw:
+		Binary image from the preview.    
     '''
     bw = auski.color.rgb2gray(preview)
     bw = auski.filters.threshold_otsu(bw) > auski.filters.gaussian(bw, sigma)
@@ -236,17 +233,17 @@ def mask_rgb(rgb, mask):
     Mask rgb image with a binary image.
 
     PARAMETERS
-    ----------
-    - rgb (numpy.array or cupy.array of int): RGB image.
-    - mask (numpy.array or cupy.array of bool): Binary image.
+    ----------    
+	(numpy.array or cupy.array of int) rgb:
+		RGB image.
+    
+	(numpy.array or cupy.array of bool) mask:
+		Binary image.
 
     RETURNS
-    -------
-    - masked_rgb (numpy.array or cupy.array of uint8): RGB image masked with the binary image.
-    
-    RAISES
-    ------
-    None
+    -------    
+	(numpy.array or cupy.array of uint8) masked_rgb:
+		RGB image masked with the binary image.    
     '''
     mask_rgb = aunp.repeat(mask[...,None],3,axis=2)
     return mask_rgb*rgb + (~mask_rgb*255).astype(aunp.uint8)
@@ -258,20 +255,26 @@ def browse_segments(slide, bw, lvl=0, required_area=10000, do_harmonize=False):
     Find slices inside the preview and load it from de slide.
 
     PARAMETERS
-    ----------
-    - slide (openslide.OpenSlide): The slide.
-    - bw (numpy.array of cupy.array of bool): Binary image from the preview.
-    - lvl=0 (int): level taken.
-    - required_area=10000 (int): Minimum area (pixels) to keep the slice.
-    - do_harmonize=False (bool): Harmonize slices using harmonize function.
+    ----------    
+	(openslide.OpenSlide) slide:
+		The slide.
+    
+	(numpy.array of cupy.array of bool) bw:
+		Binary image from the preview.
+    
+	(int) lvl=0:
+		level taken.
+    
+	(int) required_area=10000:
+		Minimum area (pixels) to keep the slice.
+    
+	(bool) do_harmonize=False:
+		Harmonize slices using harmonize function.
     
     RETURNS
-    -------
-    - Segments (generator of numpy.array of uint8): Found slices.
-    
-    RAISES
-    ------
-    None
+    -------    
+	(generator of numpy.array of uint8) Segments:
+		Found slices.    
     '''
     width, height = slide.level_dimensions[lvl]
     new_width, new_height = bw.shape[1], bw.shape[0] # for preview
@@ -301,21 +304,29 @@ def load_slice_preview_and_ext(src, lvl, divider=None, device=None):
     Load slide file and extract a preview of it using get_preview function.
 
     PARAMETERS
-    ----------
-    - src (str): Absolute path to the slide.
-    - lvl (int): Slide level taken.
-    - divider=None (float): Scale the preview by dividing the slide.
-    - device=None (int): Taken GPU.
+    ----------    
+	(str) src:
+		Absolute path to the slide.
+    
+	(int) lvl:
+		Slide level taken.
+    
+	(float) divider=None:
+		Scale the preview by dividing the slide.
+    
+	(int) device=None:
+		Taken GPU.
 
     RETURNS
-    -------
-    - slide (openslide.OpenSlide): The slide.
-    - preview (numpy.array of cupy.array of int): Fully loaded slide with low resolution.
-    - slide_ext (str): Slide extension.
+    -------    
+	(openslide.OpenSlide) slide:
+		The slide.
     
-    RAISES
-    ------
-    None
+	(numpy.array of cupy.array of int) preview:
+		Fully loaded slide with low resolution.
+    
+	(str) slide_ext:
+		Slide extension.    
     '''
     gpu.select_device(device)
     slide = OpenSlide(src)
@@ -330,21 +341,28 @@ def tmnt_save_preview_from_slide(src, dstdir, lvl, divider=None, ext="png", devi
     Load slide preview and save it.
     
     PARAMETERS
-    ----------
-    - src (str): Absolute path to the slide.
-    - dstdir (str): Absolute path to the directory where to save the preview.
-    - lvl (int): Slide level taken.
-    - divider=None (float): Scale the preview by dividing the slide.
-    - ext="png" (str): Saved preview extension.
-    - device=None (int): Taken GPU.
+    ----------    
+	(str) src:
+		Absolute path to the slide.
+    
+	(str) dstdir:
+		Absolute path to the directory where to save the preview.
+    
+	(int) lvl:
+		Slide level taken.
+    
+	(float) divider=None:
+		Scale the preview by dividing the slide.
+    
+	(str) ext="png":
+		Saved preview extension.
+    
+	(int) device=None:
+		Taken GPU.
     
     RETURNS
     -------
-    None
-    
-    RAISES
-    ------
-    None
+	None    
     '''
     _, preview, slide_ext = load_slice_preview_and_ext(src, lvl, divider, device)
     imsave(os.path.join(dstdir, f"{os.path.basename(src)[:-len(slide_ext)]}.{ext}"), 
@@ -358,25 +376,40 @@ def tmnt_save_segments_from_slide(src, dstdir, lvlpreview, lvlsegment, fpval, si
     Find slices inside the slide and save them.
     
     PARAMETERS
-    ----------
-    - src (str): Absolute path to the slide.
-    - dstdir (str): Absolute path to the directory where to save the preview.
-    - lvlpreview (int): Slide level taken for the preview.
-    - lvlsegment (int): Slide level taken for the segment.
-    - fpval (int): Value that is used to creates footprints for segmentation.
-    - sigma (float): Value for gaussian filter (applied on the slide before segmentation).
-    - do_harmonize=False (bool): Harmonize slices using harmonize function.
-    - divider=None (float): Scale the preview by dividing the slide.
-    - ext="png" (str): Saved segments extension.
-    - device=None (int): Taken GPU.
+    ----------    
+	(str) src:
+		Absolute path to the slide.
+    
+	(str) dstdir:
+		Absolute path to the directory where to save the preview.
+    
+	(int) lvlpreview:
+		Slide level taken for the preview.
+    
+	(int) lvlsegment:
+		Slide level taken for the segment.
+    
+	(int) fpval:
+		Value that is used to creates footprints for segmentation.
+    
+	(float) sigma:
+		Value for gaussian filter (applied on the slide before segmentation).
+    
+	(bool) do_harmonize=False:
+		Harmonize slices using harmonize function.
+    
+	(float) divider=None:
+		Scale the preview by dividing the slide.
+    
+	(str) ext="png":
+		Saved segments extension.
+    
+	(int) device=None:
+		Taken GPU.
     
     RETURNS
     -------
-    None
-    
-    RAISES
-    ------
-    None
+	None    
     '''
     slide, preview, slide_ext = load_slice_preview_and_ext(src, lvlpreview, divider, device)
     bw = get_cleaned_binary(preview, fpval, sigma)
@@ -392,19 +425,21 @@ def browse_tiles(segment, size=512, blank_tol=0.35):
     Regulary crop a segment into multiple tiles of same size.
 
     PARAMETERS
-    ----------
-    - segment (numpy.array of int): Slice to tile.
-    - size=512 (int): Size of each tile.
-    - blank_tol=0.35 (float): Percentage of white pixels tolerated for a tile.
+    ----------    
+	(numpy.array of int) segment:
+		Slice to tile.
+    
+	(int) size=512:
+		Size of each tile.
+    
+	(float) blank_tol=0.35:
+		Percentage of white pixels tolerated for a tile.
 
     RETURNS
-    -------
-    - coordinates (generator of tuple of int): Tiles coordinates (x,y).
-    - tiles generator of numpy.array of int): Keeped tiles.
-    
-    RAISES
-    ------
-    None
+    -------    
+	(generator of tuple of int) coordinates:
+		Tiles coordinates (x,y).
+    - tiles generator of numpy.array of int): Keeped tiles.    
     '''
     width, height = segment.shape[1], segment.shape[0]
     blank_size = size*size*blank_tol # number of pixels that can be white
@@ -428,20 +463,25 @@ def tmnt_save_tiles_from_segment(src, dstdir, size=512, blank_tol=0.35, ext="png
     Find slices inside the slide and save them.
     
     PARAMETERS
-    ----------
-    - src (str): Absolute path to the slide.
-    - dstdir (str): Absolute path to the directory where to save the preview.
-    - size=512 (int): Size of each tile.
-    - blank_tol=0.35 (float): Percentage of white pixels tolerated for a tile.
-    - ext="png" (str): Saved tiles extension.
+    ----------    
+	(str) src:
+		Absolute path to the slide.
+    
+	(str) dstdir:
+		Absolute path to the directory where to save the preview.
+    
+	(int) size=512:
+		Size of each tile.
+    
+	(float) blank_tol=0.35:
+		Percentage of white pixels tolerated for a tile.
+    
+	(str) ext="png":
+		Saved tiles extension.
     
     RETURNS
     -------
-    None
-    
-    RAISES
-    ------
-    None
+	None    
     '''
     segment = np.array(imread(src))
     _, segment_ext = os.path.splitext(src)
