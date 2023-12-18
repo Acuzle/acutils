@@ -4,7 +4,7 @@
 
 The acutils library is designed to facilitate data processing tasks, especially for individuals dealing with custom data preprocessing before building machine learning algorithms. It has been used in various domains, including pathology image processing, custom segmentation, and frame extractions from videos.
 
-HERE ARE THE [DOCUMENTATION FILES](./doc).
+HERE ARE THE [ONLINE DOCUMENTATION](https://acuzle.github.io/acutilsdoc/acutils.html#submodules) AND THE [DOCUMENTATION FILES](./doc).
 
 
 
@@ -120,6 +120,8 @@ Use the relevant modules from acutils based on your data processing needs:
 
 - **handler**: High-level classes to handle data processing.
 - **file**: About directories and files.
+
+
 - **gpu**: GPU computation (for now, only used in pathology module).
 - **image**: Computer Vision tasks on images.
 - **multiprocess**: Multiprocessing and process management.
@@ -127,7 +129,7 @@ Use the relevant modules from acutils based on your data processing needs:
 - **sheet**: Handling pandas DataFrames.
 - **video**: Computer Vision tasks on Videos.
 
-Refer to the [documentation files](./doc) and code [examples](./examples) for detailed usage instructions.
+Refer to the [online documentation](https://acuzle.github.io/acutilsdoc/acutils.html#submodules) and code [examples](./examples) for detailed usage instructions.
 
 
 
