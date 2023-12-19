@@ -13,10 +13,10 @@ maintainers = [
   { name="Acuzle", email="contact@acuzle.com" },
   { name="ThomasPDM", email="thomaspdm@acuzle.com" },
 ]
-description = "Data pre processing library implemented by Acuzle."
+description = "Data processing library implemented by Acuzle."
 readme = "README.md"
 license = { text="Apache 2" }
-requires-python = ">=3.7"
+requires-python = ">=3.8"
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: Apache 2",
@@ -26,7 +26,8 @@ dependencies = [
   'numpy',
   'joblib',
   'pandas',
-  'openpyxl'
+  'openpyxl',
+  'xlrd >= 1.0.0'
 ]
 
 [project.optional-dependencies]

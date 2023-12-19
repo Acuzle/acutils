@@ -41,7 +41,7 @@ def delete_clueless_rows(df, clueless_words=None, columns=None, inplace=False):
         columns = df.columns
 
     # Create a mask that is True for rows that should be retained
-    mask = df[columns].applymap(
+    mask = df[columns].map(
         lambda x: x not in clueless_words and x is not None)
 
     # If inplace is True, update the DataFrame in place
@@ -82,7 +82,7 @@ def read_df_from_any_avalaible_extensions(sheetpath):
     if file_extension in ['csv', 'txt']:
         return pd.read_csv(sheetpath)
     elif file_extension in ['xls', 'xlsx']:
-        return pd.read_excel(sheetpath)
+        return pd.read_excel(sheetpath, engine='openpyxl')
     elif file_extension in ['feather', 'parquet', 'hdf5']:
         return pd.read_feather(sheetpath)
     elif file_extension == 'sas7bdat':
