@@ -146,3 +146,6 @@ multiprocess.rst
 pathology.rst
 sheet.rst
 video.rst
+
+# Example
+fake_data/
