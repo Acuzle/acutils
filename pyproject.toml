@@ -3,8 +3,8 @@ requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "acutils"
-version = "0.1"
+name = "acutils-python"
+version = "0.1.1"
 authors = [
   { name="Acuzle", email="contact@acuzle.com" },
   { name="ThomasPDM", email="thomaspdm@acuzle.com" },
@@ -19,7 +19,7 @@ license = { text="Apache 2" }
 requires-python = ">=3.8"
 classifiers = [
     "Programming Language :: Python :: 3",
-    "License :: OSI Approved :: Apache 2",
+    "License :: OSI Approved :: Apache Software License",
     "Operating System :: OS Independent",
 ]
 dependencies = [

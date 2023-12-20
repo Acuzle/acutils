@@ -60,7 +60,7 @@ handler.make_datasets('./train_bal', './val_bal', bal_tdata, bal_vdata,
 ### From pip
 
 ```bash
-pip install acutils
+pip install acutils-python
 ```
 
 
@@ -75,7 +75,7 @@ python3 -m build
 ```
 
 ```bash
-pip install dist/acutils-0.1-py3-none-any.whl
+pip install dist/acutils_python-0.1.1-py3-none-any.whl
 ```
 
 
